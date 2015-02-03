@@ -1,37 +1,61 @@
-package game
+package gogame
 
 import (
 	b2d "github.com/neguse/go-box2d-lite/box2dlite"
 	sdl "github.com/veandco/go-sdl2/sdl"
+	ttf "github.com/veandco/go-sdl2/sdl_ttf"
 )
 
-type Game struct {
-	Window   *sdl.Window
-	Renderer *sdl.Renderer
-
-	resources ResourceMap
-	quit      bool
-}
-
-type PhysicsGame struct {
-	Game
-	World *b2d.World
-}
-
-type ResourceType string
-
-const (
-	AudioResource ResourceType = "audio"
-	FontResource  ResourceType = "font"
-	ImageResource ResourceType = "image"
-)
-
-type Resource struct {
+type FontResource struct {
 	Id       string
 	FilePath string
-	Type     ResourceType
+	Size     int
 	loaded   bool
-	handler  ResourceHandler
+	font     *ttf.Font
 }
 
-type ResourceMap map[string]Resource
+type ImageResource struct {
+	Id       string
+	FilePath string
+	loaded   bool
+	image    *sdl.Surface
+	texture  *sdl.Texture
+}
+
+type AudioResource struct {
+	Id       string
+	FilePath string
+	loaded   bool
+}
+
+type Sprite struct {
+	Id       string
+	Pos      sdl.Point
+	Width    int32
+	Height   int32
+	Rotation float64
+	Visible  bool
+	image    *sdl.Surface
+	texture  *sdl.Texture
+}
+
+type audioResourceMap map[string]*AudioResource
+type fontResourceMap map[string]*FontResource
+type imageResourceMap map[string]ImageResource
+type SpriteMap map[string]*Sprite
+
+type RenderFunction func()
+
+type Game struct {
+	Window         *sdl.Window
+	Renderer       *sdl.Renderer
+	SpriteBank     SpriteMap
+	renderCallback RenderFunction
+	audioResources audioResourceMap
+	fontResources  fontResourceMap
+	imageResources imageResourceMap
+	quit           bool
+	world          *b2d.World
+	width          int
+	height         int
+}

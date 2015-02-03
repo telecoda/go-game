@@ -1,78 +1,121 @@
-package game
+package gogame
 
 import (
-	"errors"
 	"fmt"
+
+	"github.com/veandco/go-sdl2/sdl"
+	"github.com/veandco/go-sdl2/sdl_image"
+	"github.com/veandco/go-sdl2/sdl_ttf"
 )
 
-type ImageHandler struct{}
-type FontHandler struct{}
-type AudioHandler struct{}
+func init() {
+	// initialise library
+	ttf.Init()
 
-type ResourceHandler interface {
-	Load() error
-	Unload() error
 }
 
-// Adds resource & loads it into memory
-func (game *Game) AddResource(id, filePath string, resourceType ResourceType) error {
+// Add a font resource & loads it into memory
+func (g *Game) AddFontResource(resource FontResource) error {
 
-	resource := Resource{
-		Id:       id,
-		FilePath: filePath,
-		Type:     resourceType,
-		loaded:   false,
-	}
+	resource.loaded = false
 
-	handler, err := initHandler(resourceType)
+	font, err := ttf.OpenFont(resource.FilePath, resource.Size)
 	if err != nil {
-		fmt.Printf("Error initialising resource handler:%s\n", err)
-		return err
+		return fmt.Errorf("Error in AddFontResource:%s", err)
 	}
-	resource.handler = handler
 
-	handler.Load()
-	game.resources["id"] = resource
-
-	return nil
-
-}
-
-func initHandler(resourceType ResourceType) (ResourceHandler, error) {
-	switch resourceType {
-	case ImageResource:
-		return ImageHandler{}, nil
-	case FontResource:
-		return FontHandler{}, nil
-	case AudioResource:
-		return AudioHandler{}, nil
-	default:
-		return ImageHandler{}, errors.New("Unknown resource type")
+	if font != nil {
+		resource.font = font
+		resource.loaded = true
 	}
+
+	g.fontResources[resource.Id] = &resource
+
+	return nil
+
 }
 
-// Resource handlers
+func (g *Game) GetFontResource(resourceId string) (*ttf.Font, error) {
 
-func (a AudioHandler) Load() error {
-	return nil
+	res, ok := g.fontResources[resourceId]
+	if !ok {
+		return nil, fmt.Errorf("Error: unknown font resource:%\n ", resourceId)
+	}
+
+	if res.font == nil {
+		return nil, fmt.Errorf("Error: font not loaded:%s\n ", resourceId)
+	}
+
+	return res.font, nil
 }
 
-func (a AudioHandler) Unload() error {
+// Add an image resource & loads it into memory
+func (g *Game) AddImageResource(resource ImageResource) error {
+
+	resource.loaded = false
+
+	image, err := img.Load(resource.FilePath)
+	if err != nil {
+		return fmt.Errorf("Failed to load image: %s\n", err)
+
+	}
+	texture, err := g.Renderer.CreateTextureFromSurface(image)
+	if err != nil {
+		return fmt.Errorf("Failed to create texture: %s\n", err)
+	}
+
+	resource.image = image
+	resource.texture = texture
+	resource.loaded = true
+
+	g.imageResources[resource.Id] = resource
+
 	return nil
+
 }
 
-func (f FontHandler) Load() error {
-	return nil
+func (g *Game) GetImageResource(resourceId string) (*sdl.Surface, *sdl.Texture, error) {
+
+	res, ok := g.imageResources[resourceId]
+	if !ok {
+		return nil, nil, fmt.Errorf("Warning: unknown image resource:%\n ", resourceId)
+	}
+
+	if res.image == nil {
+		return nil, nil, fmt.Errorf("Warning: image not loaded:%\n ", resourceId)
+	}
+
+	if res.texture == nil {
+		return nil, nil, fmt.Errorf("Warning: texture not loaded:%\n ", resourceId)
+	}
+
+	return res.image, res.texture, nil
 }
 
-func (f FontHandler) Unload() error {
-	return nil
+func (a audioResourceMap) Destroy() {
+
+	for _, res := range a {
+		fmt.Printf("Freeing audio resource:%s\n", res.Id)
+	}
+
 }
 
-func (i ImageHandler) Load() error {
-	return nil
+func (i imageResourceMap) Destroy() {
+
+	for _, res := range i {
+		fmt.Printf("Freeing image resource:%s\n", res.Id)
+		res.image.Free()
+		res.texture.Destroy()
+	}
+
 }
 
-func (i ImageHandler) Unload() error {
-	return nil
+// close all font resources
+func (f fontResourceMap) Destroy() {
+
+	for _, res := range f {
+		fmt.Printf("Freeing font resource:%s\n", res.Id)
+		res.font.Close()
+	}
+
 }
