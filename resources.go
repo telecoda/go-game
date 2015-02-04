@@ -15,7 +15,7 @@ func init() {
 }
 
 // Add a font resource & loads it into memory
-func (g *Game) AddFontResource(resource FontResource) error {
+func AddFontResource(resource FontResource) error {
 
 	resource.loaded = false
 
@@ -29,15 +29,15 @@ func (g *Game) AddFontResource(resource FontResource) error {
 		resource.loaded = true
 	}
 
-	g.fontResources[resource.Id] = &resource
+	fontResources[resource.Id] = &resource
 
 	return nil
 
 }
 
-func (g *Game) GetFontResource(resourceId string) (*ttf.Font, error) {
+func GetFontResource(resourceId string) (*ttf.Font, error) {
 
-	res, ok := g.fontResources[resourceId]
+	res, ok := fontResources[resourceId]
 	if !ok {
 		return nil, fmt.Errorf("Error: unknown font resource:%\n ", resourceId)
 	}
@@ -50,7 +50,7 @@ func (g *Game) GetFontResource(resourceId string) (*ttf.Font, error) {
 }
 
 // Add an image resource & loads it into memory
-func (g *Game) AddImageResource(resource ImageResource) error {
+func AddImageResource(resource ImageResource) error {
 
 	resource.loaded = false
 
@@ -59,7 +59,7 @@ func (g *Game) AddImageResource(resource ImageResource) error {
 		return fmt.Errorf("Failed to load image: %s\n", err)
 
 	}
-	texture, err := g.Renderer.CreateTextureFromSurface(image)
+	texture, err := game.Renderer.CreateTextureFromSurface(image)
 	if err != nil {
 		return fmt.Errorf("Failed to create texture: %s\n", err)
 	}
@@ -68,15 +68,15 @@ func (g *Game) AddImageResource(resource ImageResource) error {
 	resource.texture = texture
 	resource.loaded = true
 
-	g.imageResources[resource.Id] = resource
+	imageResources[resource.Id] = resource
 
 	return nil
 
 }
 
-func (g *Game) GetImageResource(resourceId string) (*sdl.Surface, *sdl.Texture, error) {
+func getImageResource(resourceId string) (*sdl.Surface, *sdl.Texture, error) {
 
-	res, ok := g.imageResources[resourceId]
+	res, ok := imageResources[resourceId]
 	if !ok {
 		return nil, nil, fmt.Errorf("Warning: unknown image resource:%\n ", resourceId)
 	}

@@ -2,26 +2,26 @@ package gogame
 
 import sdl "github.com/veandco/go-sdl2/sdl"
 
-func (g *Game) RenderGrid(xSize, ySize int, color sdl.Color) {
+func RenderGrid(xSize, ySize int, color sdl.Color) {
 
-	g.Renderer.SetDrawColor(color.R, color.G, color.B, color.A)
+	game.Renderer.SetDrawColor(color.R, color.G, color.B, color.A)
 
 	// draw surround
-	g.Renderer.DrawLine(0, 0, g.width-1, 0)
-	g.Renderer.DrawLine(g.width-1, 0, g.width-1, g.height-1)
-	g.Renderer.DrawLine(g.width-1, g.height-1, 0, g.height-1)
-	g.Renderer.DrawLine(0, g.height-1, 0, 0)
+	game.Renderer.DrawLine(0, 0, game.width-1, 0)
+	game.Renderer.DrawLine(game.width-1, 0, game.width-1, game.height-1)
+	game.Renderer.DrawLine(game.width-1, game.height-1, 0, game.height-1)
+	game.Renderer.DrawLine(0, game.height-1, 0, 0)
 
 	// draw vertical lines
-	for x := 0; x < g.width; x += xSize {
+	for x := 0; x < game.width; x += xSize {
 
-		g.Renderer.DrawLine(x, 0, x, g.height-1)
+		game.Renderer.DrawLine(x, 0, x, game.height-1)
 
 	}
 	// draw horizontal lines
-	for y := 0; y < g.height; y += ySize {
+	for y := 0; y < game.height; y += ySize {
 
-		g.Renderer.DrawLine(0, y, g.width-1, y)
+		game.Renderer.DrawLine(0, y, game.width-1, y)
 
 	}
 }

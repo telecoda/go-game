@@ -2,6 +2,7 @@ package gogame
 
 import (
 	"runtime"
+	"time"
 
 	b2d "github.com/neguse/go-box2d-lite/box2dlite"
 	sdl "github.com/veandco/go-sdl2/sdl"
@@ -11,7 +12,28 @@ const (
 	timeStep = 1.0 / 60
 )
 
-func NewGame(winTitle string, winWidth, winHeight int, renderCallback RenderFunction) *Game {
+var lastFrame = time.Now()
+
+var audioResources audioResourceMap
+var fontResources fontResourceMap
+var imageResources imageResourceMap
+var spriteBank SpriteMap // Sprite bank contains ALL sprites
+var spriteLayers SpriteLayers
+
+var game Game
+
+var FramesPerSecond = 0.0
+
+func init() {
+	// init global library resources
+	audioResources = make(audioResourceMap)
+	fontResources = make(fontResourceMap)
+	imageResources = make(imageResourceMap)
+	spriteBank = make(SpriteMap)
+	spriteLayers = make(SpriteLayers)
+}
+
+func NewGame(winTitle string, winWidth, winHeight int, renderCallback RenderFunction) error {
 	window, _ := sdl.CreateWindow(
 		winTitle, sdl.WINDOWPOS_CENTERED, sdl.WINDOWPOS_CENTERED,
 		winWidth, winHeight, sdl.WINDOW_OPENGL)
@@ -28,97 +50,115 @@ func NewGame(winTitle string, winWidth, winHeight int, renderCallback RenderFunc
 	iterations := 10
 	world := b2d.NewWorld(gravity, iterations)
 
-	audio := make(audioResourceMap)
-	images := make(imageResourceMap)
-	fonts := make(fontResourceMap)
-	sprites := make(SpriteMap)
+	// destroy old resources first
+	audioResources.Destroy()
+	audioResources = make(audioResourceMap)
+	imageResources.Destroy()
+	imageResources = make(imageResourceMap)
+	fontResources.Destroy()
+	fontResources = make(fontResourceMap)
 
-	return &Game{
+	spriteBank = make(SpriteMap)
+	spriteLayers = make(SpriteLayers)
+
+	game = Game{
 		Window:         window,
 		Renderer:       renderer,
-		SpriteBank:     sprites,
 		renderCallback: renderCallback,
-		audioResources: audio,
-		fontResources:  fonts,
-		imageResources: images,
 		world:          world,
 		width:          winWidth,
 		height:         winHeight,
 	}
+
+	return nil
 }
 
-func (g *Game) Destroy() {
+func Destroy() {
 	// free image resources
-	g.imageResources.Destroy()
+	imageResources.Destroy()
 
 	// free font resources
-	g.fontResources.Destroy()
+	fontResources.Destroy()
 
 	// free audio resources
-	g.audioResources.Destroy()
+	audioResources.Destroy()
 
 	// free SDL resources
-	g.Renderer.Destroy()
-	g.Window.Destroy()
+	game.Renderer.Destroy()
+	game.Window.Destroy()
 }
 
-func (g *Game) EventLoop() {
+func EventLoop() {
 	t1 := sdl.GetTicks()
 
 	for {
-		g.DoEvents()
+		DoEvents()
 
 		t2 := sdl.GetTicks()
-		g.OnUpdate(t2 - t1)
-		g.OnRender()
+		OnUpdate(t2 - t1)
+		OnRender()
 		t1 = t2
 
 		sdl.Delay(16)
-		g.Present()
+		Present()
 
-		if g.quit {
+		if game.quit {
 			break
 		}
 	}
 }
 
-func (g *Game) DoEvents() {
+func DoEvents() {
 	for {
 		e := sdl.PollEvent()
 		if e == nil {
 			break
 		}
-		g.ProcessEvent(e)
+		ProcessEvent(e)
 	}
 }
 
-func (g *Game) ProcessEvent(e interface{}) {
+func ProcessEvent(e interface{}) {
 
 	switch t := e.(type) {
 	case *sdl.QuitEvent:
-		g.quit = true
+		game.quit = true
 	case *sdl.KeyDownEvent:
 		switch t.Keysym.Sym {
 		case sdl.K_ESCAPE:
-			g.quit = true
+			game.quit = true
 		}
 	}
 }
 
-func (g *Game) OnUpdate(ms uint32) {
-	g.world.Step(timeStep)
+func OnUpdate(ms uint32) {
+	game.world.Step(timeStep)
 }
 
-func (g *Game) OnRender() {
-	g.renderCallback()
+func OnRender() {
+	game.Renderer.SetDrawColor(0xee, 0xee, 0xee, 0x00)
+	game.Renderer.Clear()
+	FramesPerSecond = calcFps()
+	game.renderCallback()
 
 }
 
-func (g *Game) Present() {
-	g.Renderer.Present()
+func Present() {
+	game.Renderer.Present()
 }
 
 func init() {
 	// http://www.oki-osk.jp/esc/golang/cgo-osx.html#3
 	runtime.LockOSThread()
+}
+
+func calcFps() float64 {
+	now := time.Now()
+
+	diff := now.Sub(lastFrame)
+	lastFrame = now
+
+	oneSecond := time.Duration(1 * time.Second)
+
+	return float64(oneSecond.Nanoseconds()) / float64(diff.Nanoseconds())
 }
