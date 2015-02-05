@@ -4,10 +4,22 @@ import (
 	"fmt"
 	"sort"
 
+	b2d "github.com/neguse/go-box2d-lite/box2dlite"
+
 	sdl "github.com/veandco/go-sdl2/sdl"
 )
 
-func CreateSprite(spriteId string, sprite Sprite) error {
+const (
+	ratio                        = 32.0
+	spriteToPhysicsRatio float64 = 1.0 / ratio // 1/32nd
+	physicsToSpriteRatio float64 = ratio / 1.0 // 32 times
+)
+
+func CreateSprite(spriteId string, sprite *Sprite) error {
+
+	if sprite == nil {
+		return fmt.Errorf("Error: sprite pointer is nil")
+	}
 
 	if sprite.ImageResourceId != "" {
 		err := sprite.SetImage(sprite.ImageResourceId)
@@ -16,9 +28,33 @@ func CreateSprite(spriteId string, sprite Sprite) error {
 		}
 	}
 
-	spriteBank[spriteId] = &sprite
+	sprite.applyPhysics = false
+	sprite.mass = 0.0
+
+	spriteBank[spriteId] = sprite
 
 	return nil
+}
+
+func (s *Sprite) EnablePhysics(mass float64) {
+	s.mass = mass
+
+	sizeOfBody := b2d.Vec2{float64(s.Width) * spriteToPhysicsRatio, float64(s.Height) * spriteToPhysicsRatio}
+
+	body := b2d.Body{}
+	body.Set(&sizeOfBody, mass)
+
+	posOfBody := b2d.Vec2{float64(s.Pos.X) * spriteToPhysicsRatio, float64(s.Pos.Y) * spriteToPhysicsRatio}
+
+	body.Position = posOfBody
+	body.Rotation = s.Rotation * DegToRad
+
+	s.applyPhysics = true
+
+	s.body = &body
+
+	game.world.AddBody(&body)
+
 }
 
 func CreateSpriteLayer(layerId int, pos sdl.Point) (*SpriteLayer, error) {
@@ -149,8 +185,25 @@ func renderSprite(sprite *Sprite) error {
 		return nil
 	}
 
-	return renderRotatedTexture(sprite.texture, sprite.Pos, sprite.Rotation, sprite.image.W, sprite.image.H, sprite.Width, sprite.Height)
+	return renderSpriteWithOffset(sprite, sdl.Point{0.0, 0.0})
 
+}
+
+func (s *Sprite) renderBox(centre b2d.Vec2, rotInRadians float64) {
+
+	rotation := b2d.Mat22ByAngle(rotInRadians)
+
+	half := b2d.Vec2{float64(s.Width / 2), float64(-s.Height / 2)}
+
+	v1 := centre.Add(rotation.MulV(b2d.Vec2{-half.X, -half.Y}))
+	v2 := centre.Add(rotation.MulV(b2d.Vec2{half.X, -half.Y}))
+	v3 := centre.Add(rotation.MulV(b2d.Vec2{half.X, half.Y}))
+	v4 := centre.Add(rotation.MulV(b2d.Vec2{-half.X, half.Y}))
+
+	game.Renderer.DrawLine(int(v1.X), int(v1.Y), int(v2.X), int(v2.Y))
+	game.Renderer.DrawLine(int(v2.X), int(v2.Y), int(v3.X), int(v3.Y))
+	game.Renderer.DrawLine(int(v3.X), int(v3.Y), int(v4.X), int(v4.Y))
+	game.Renderer.DrawLine(int(v4.X), int(v4.Y), int(v1.X), int(v1.Y))
 }
 
 func renderSpriteWithOffset(sprite *Sprite, offset sdl.Point) error {
@@ -163,7 +216,28 @@ func renderSpriteWithOffset(sprite *Sprite, offset sdl.Point) error {
 		return nil
 	}
 
-	relativePos := sdl.Point{sprite.Pos.X + offset.X, sprite.Pos.Y + offset.Y}
+	var pos sdl.Point
+	var rotInRadians float64
+
+	if sprite.applyPhysics {
+		// use body co-ords for rendering
+		game.Renderer.SetDrawColor(0xff, 0x00, 0x00, 0xff)
+		pos = sdl.Point{int32(sprite.body.Position.X * physicsToSpriteRatio), int32(sprite.body.Position.Y * physicsToSpriteRatio)}
+		rotInRadians = sprite.body.Rotation
+	} else {
+		game.Renderer.SetDrawColor(0x00, 0x00, 0xff, 0xff)
+		pos = sprite.Pos
+		rotInRadians = sprite.Rotation * DegToRad
+	}
+
+	relativePos := sdl.Point{pos.X + offset.X, pos.Y + offset.Y}
+
+	centre := b2d.Vec2{float64(relativePos.X + sprite.Width/2), float64(relativePos.Y + sprite.Height/2)}
+
+	if game.RenderBoxes {
+		// render outline box of sprite
+		sprite.renderBox(centre, rotInRadians)
+	}
 
 	return renderRotatedTexture(sprite.texture, relativePos, sprite.Rotation, sprite.image.W, sprite.image.H, sprite.Width, sprite.Height)
 

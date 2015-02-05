@@ -42,6 +42,7 @@ type Game struct {
 	world           *b2d.World
 	width           int
 	height          int
+	RenderBoxes     bool
 	FramesPerSecond float64
 }
 
@@ -55,6 +56,10 @@ type Sprite struct {
 	ImageResourceId string
 	image           *sdl.Surface
 	texture         *sdl.Texture
+
+	applyPhysics bool
+	mass         float64
+	body         *b2d.Body
 }
 
 type SpriteMap map[string]*Sprite

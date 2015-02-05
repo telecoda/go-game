@@ -1,6 +1,7 @@
 package gogame
 
 import (
+	"math"
 	"runtime"
 	"time"
 
@@ -10,6 +11,8 @@ import (
 
 const (
 	timeStep = 1.0 / 60
+	RadToDeg = 180 / math.Pi
+	DegToRad = math.Pi / 180
 )
 
 var lastFrame = time.Now()
@@ -46,9 +49,10 @@ func NewGame(winTitle string, winWidth, winHeight int, renderCallback RenderFunc
 		return nil
 	}
 
-	gravity := b2d.Vec2{0.0, -10.0}
+	gravity := b2d.Vec2{0.0, 10.0}
 	iterations := 10
 	world := b2d.NewWorld(gravity, iterations)
+	world.Clear()
 
 	// destroy old resources first
 	audioResources.Destroy()
@@ -68,6 +72,7 @@ func NewGame(winTitle string, winWidth, winHeight int, renderCallback RenderFunc
 		world:          world,
 		width:          winWidth,
 		height:         winHeight,
+		RenderBoxes:    true,
 	}
 
 	return nil
