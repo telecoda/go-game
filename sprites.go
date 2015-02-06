@@ -44,7 +44,7 @@ func (s *Sprite) EnablePhysics(mass float64) {
 	body := b2d.Body{}
 	body.Set(&sizeOfBody, mass)
 
-	posOfBody := b2d.Vec2{float64(s.Pos.X) * spriteToPhysicsRatio, float64(s.Pos.Y) * spriteToPhysicsRatio}
+	posOfBody := b2d.Vec2{float64(s.Pos.X+s.Width/2) * spriteToPhysicsRatio, float64(s.Pos.Y+s.Height/2) * spriteToPhysicsRatio}
 
 	body.Position = posOfBody
 	body.Rotation = s.Rotation * DegToRad
@@ -218,27 +218,40 @@ func renderSpriteWithOffset(sprite *Sprite, offset sdl.Point) error {
 
 	var pos sdl.Point
 	var rotInRadians float64
+	var rotInDegrees float64
 
 	if sprite.applyPhysics {
 		// use body co-ords for rendering
 		game.Renderer.SetDrawColor(0xff, 0x00, 0x00, 0xff)
 		pos = sdl.Point{int32(sprite.body.Position.X * physicsToSpriteRatio), int32(sprite.body.Position.Y * physicsToSpriteRatio)}
 		rotInRadians = sprite.body.Rotation
+		rotInDegrees = sprite.body.Rotation * RadToDeg
 	} else {
 		game.Renderer.SetDrawColor(0x00, 0x00, 0xff, 0xff)
 		pos = sprite.Pos
 		rotInRadians = sprite.Rotation * DegToRad
+		rotInDegrees = sprite.Rotation
 	}
 
 	relativePos := sdl.Point{pos.X + offset.X, pos.Y + offset.Y}
 
+	// offset from middle of sprite
+	relativePos.X -= sprite.Width / 2
+	relativePos.Y -= sprite.Height / 2
+
 	centre := b2d.Vec2{float64(relativePos.X + sprite.Width/2), float64(relativePos.Y + sprite.Height/2)}
+
+	err := renderRotatedTexture(sprite.texture, relativePos, rotInDegrees, sprite.image.W, sprite.image.H, sprite.Width, sprite.Height)
+
+	if err != nil {
+		return err
+	}
 
 	if game.RenderBoxes {
 		// render outline box of sprite
 		sprite.renderBox(centre, rotInRadians)
 	}
 
-	return renderRotatedTexture(sprite.texture, relativePos, sprite.Rotation, sprite.image.W, sprite.image.H, sprite.Width, sprite.Height)
+	return nil
 
 }
