@@ -6,6 +6,34 @@ import (
 	ttf "github.com/veandco/go-sdl2/sdl_ttf"
 )
 
+type FontRenderer interface {
+	RenderText(resourceId string, text string, pos sdl.Point, textColor sdl.Color) error
+}
+
+type ResourceHandler interface {
+	AddFontResource(resource FontResource) error
+	GetFontResource(resourceId string) (*ttf.Font, error)
+	AddImageResource(resource ImageResource) error
+}
+
+type SpriteRenderer interface {
+	CreateSprite(spriteId string, sprite *Sprite) error
+	CreateSpriteLayer(layerId int, pos sdl.Point) (*SpriteLayer, error)
+	GetSprite(spriteId string) (*Sprite, error)
+	RenderSprite(spriteId string) error
+	EnablePhysics(mass float64)
+}
+
+type LayerRenderer interface {
+	CreateSpriteLayer(layerId int, pos sdl.Point) (*SpriteLayer, error)
+	AddSpriteToLayer(spriteId string) error
+	RenderLayers() error
+}
+
+type GridRenderer interface {
+	RenderGrid(xSize, ySize int, color sdl.Color)
+}
+
 type FontResource struct {
 	Id       string
 	FilePath string

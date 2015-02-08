@@ -141,7 +141,7 @@ func OnUpdate(ms uint32) {
 }
 
 func OnRender() {
-	game.Renderer.SetDrawColor(0xee, 0xee, 0xee, 0x00)
+	game.Renderer.SetDrawColor(0xe0, 0xff, 0xff, 0x00)
 	game.Renderer.Clear()
 	FramesPerSecond = calcFps()
 	game.renderCallback()

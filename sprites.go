@@ -95,6 +95,7 @@ func (l *SpriteLayer) AddSpriteToLayer(spriteId string) error {
 	return nil
 }
 
+// renders layers 
 func RenderLayers() error {
 
 	furthest := len(spriteLayers)
