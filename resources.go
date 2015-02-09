@@ -14,8 +14,22 @@ func init() {
 
 }
 
+func (a *assets) Destroy() {
+	a.audioAssets.Destroy()
+	a.fontAssets.Destroy()
+	a.imageAssets.Destroy()
+	a.spriteBank.Destroy()
+}
+
+func (a *assets) Initialize() {
+	a.audioAssets = make(audioResourceMap)
+	a.fontAssets = make(fontResourceMap)
+	a.imageAssets = make(imageResourceMap)
+	a.spriteBank = make(spriteMap)
+}
+
 // Add a font resource & loads it into memory
-func AddFontResource(resource FontResource) error {
+func (a *assets) AddFontResource(resource FontResource) error {
 
 	resource.loaded = false
 
@@ -24,20 +38,24 @@ func AddFontResource(resource FontResource) error {
 		return fmt.Errorf("Error in AddFontResource:%s", err)
 	}
 
+	if resource.Size < 1 {
+		return fmt.Errorf("Error: font size must be larger than %d", resource.Size)
+	}
+
 	if font != nil {
 		resource.font = font
 		resource.loaded = true
 	}
 
-	fontResources[resource.Id] = &resource
+	a.fontAssets[resource.Id] = &resource
 
 	return nil
 
 }
 
-func GetFontResource(resourceId string) (*ttf.Font, error) {
+func (a *assets) getFontResource(resourceId string) (*ttf.Font, error) {
 
-	res, ok := fontResources[resourceId]
+	res, ok := a.fontAssets[resourceId]
 	if !ok {
 		return nil, fmt.Errorf("Error: unknown font resource:%\n ", resourceId)
 	}
@@ -50,7 +68,7 @@ func GetFontResource(resourceId string) (*ttf.Font, error) {
 }
 
 // Add an image resource & loads it into memory
-func AddImageResource(resource ImageResource) error {
+func (a *assets) AddImageResource(resource ImageResource) error {
 
 	resource.loaded = false
 
@@ -59,7 +77,7 @@ func AddImageResource(resource ImageResource) error {
 		return fmt.Errorf("Failed to load image: %s\n", err)
 
 	}
-	texture, err := game.Renderer.CreateTextureFromSurface(image)
+	texture, err := rendCont.Renderer.CreateTextureFromSurface(image)
 	if err != nil {
 		return fmt.Errorf("Failed to create texture: %s\n", err)
 	}
@@ -68,15 +86,15 @@ func AddImageResource(resource ImageResource) error {
 	resource.texture = texture
 	resource.loaded = true
 
-	imageResources[resource.Id] = resource
+	a.imageAssets[resource.Id] = resource
 
 	return nil
 
 }
 
-func getImageResource(resourceId string) (*sdl.Surface, *sdl.Texture, error) {
+func (a *assets) getImageResource(resourceId string) (*sdl.Surface, *sdl.Texture, error) {
 
-	res, ok := imageResources[resourceId]
+	res, ok := a.imageAssets[resourceId]
 	if !ok {
 		return nil, nil, fmt.Errorf("Warning: unknown image resource:%\n ", resourceId)
 	}
@@ -116,6 +134,14 @@ func (f fontResourceMap) Destroy() {
 	for _, res := range f {
 		fmt.Printf("Freeing font resource:%s\n", res.Id)
 		res.font.Close()
+	}
+
+}
+
+func (s spriteMap) Destroy() {
+
+	for _, sprite := range s {
+		fmt.Printf("Freeing sprite resource:%s\n", sprite.Id)
 	}
 
 }

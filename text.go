@@ -6,14 +6,14 @@ import (
 	sdl "github.com/veandco/go-sdl2/sdl"
 )
 
-func RenderText(resourceId string, text string, pos sdl.Point, textColor sdl.Color) error {
+func (r renderController) RenderText(resourceId string, text string, pos sdl.Point, textColor sdl.Color) error {
 
-	font, err := GetFontResource(resourceId)
+	font, err := gameAssets.getFontResource(resourceId)
 	if err != nil {
 		return err
 	}
 	textSurface := font.RenderText_Solid(text, textColor)
-	texture, err := game.Renderer.CreateTextureFromSurface(textSurface)
+	texture, err := r.Renderer.CreateTextureFromSurface(textSurface)
 	defer textSurface.Free()
 	defer texture.Destroy()
 
@@ -23,7 +23,7 @@ func RenderText(resourceId string, text string, pos sdl.Point, textColor sdl.Col
 
 	src := sdl.Rect{0, 0, textSurface.W, textSurface.H}
 	dst := sdl.Rect{int32(pos.X), int32(pos.Y), textSurface.W, textSurface.H}
-	game.Renderer.Copy(texture, &src, &dst)
+	r.Renderer.Copy(texture, &src, &dst)
 
 	return nil
 }

@@ -1,6 +1,7 @@
 package gogame
 
 import (
+	"fmt"
 	"math"
 	"runtime"
 	"time"
@@ -17,36 +18,50 @@ const (
 
 var lastFrame = time.Now()
 
-var audioResources audioResourceMap
-var fontResources fontResourceMap
-var imageResources imageResourceMap
-var spriteBank SpriteMap // Sprite bank contains ALL sprites
-var spriteLayers SpriteLayers
+var gameAssets *assets
 
-var game Game
+//var spriteLayers SpriteLayers
+
+var rendCont renderController
 
 var FramesPerSecond = 0.0
 
 func init() {
 	// init global library resources
-	audioResources = make(audioResourceMap)
-	fontResources = make(fontResourceMap)
-	imageResources = make(imageResourceMap)
-	spriteBank = make(SpriteMap)
-	spriteLayers = make(SpriteLayers)
+
+	gameAssets = &assets{}
+	gameAssets.Initialize()
 }
 
-func NewGame(winTitle string, winWidth, winHeight int, renderCallback RenderFunction) error {
+func NewGame(winTitle string, winWidth, winHeight int, renderCallback RenderFunction) (AssetHandler, RenderController, error) {
 	window, _ := sdl.CreateWindow(
 		winTitle, sdl.WINDOWPOS_CENTERED, sdl.WINDOWPOS_CENTERED,
 		winWidth, winHeight, sdl.WINDOW_OPENGL)
-	if window == nil {
-		return nil
+
+	if winTitle == "" {
+		return nil, nil, fmt.Errorf("Error: window must have a title.")
 	}
 
-	renderer, _ := sdl.CreateRenderer(window, -2, sdl.RENDERER_SOFTWARE)
+	if winWidth < 1 {
+		return nil, nil, fmt.Errorf("Error: window width must be greater than 0.")
+	}
+
+	if winHeight < 1 {
+		return nil, nil, fmt.Errorf("Error: window height must be greater than 0.")
+	}
+
+	if window == nil {
+		return nil, nil, fmt.Errorf("Error: window not created")
+	}
+
+	// try acceleration first
+	renderer, _ := sdl.CreateRenderer(window, -2, sdl.RENDERER_ACCELERATED)
 	if renderer == nil {
-		return nil
+		// revert to software
+		renderer, _ := sdl.CreateRenderer(window, -2, sdl.RENDERER_SOFTWARE)
+		if renderer == nil {
+			return nil, nil, fmt.Errorf("Error: rendered not created")
+		}
 	}
 
 	gravity := b2d.Vec2{0.0, 10.0}
@@ -55,101 +70,89 @@ func NewGame(winTitle string, winWidth, winHeight int, renderCallback RenderFunc
 	world.Clear()
 
 	// destroy old resources first
-	audioResources.Destroy()
-	audioResources = make(audioResourceMap)
-	imageResources.Destroy()
-	imageResources = make(imageResourceMap)
-	fontResources.Destroy()
-	fontResources = make(fontResourceMap)
+	gameAssets.Destroy()
+	gameAssets.Initialize()
 
-	spriteBank = make(SpriteMap)
-	spriteLayers = make(SpriteLayers)
-
-	game = Game{
+	rendCont = renderController{
 		Window:         window,
 		Renderer:       renderer,
 		renderCallback: renderCallback,
 		world:          world,
 		width:          winWidth,
 		height:         winHeight,
+		spriteLayers:   make(SpriteLayers),
 		RenderBoxes:    true,
 	}
 
-	return nil
+	return gameAssets, rendCont, nil
 }
 
 func Destroy() {
-	// free image resources
-	imageResources.Destroy()
-
-	// free font resources
-	fontResources.Destroy()
-
-	// free audio resources
-	audioResources.Destroy()
+	// free resources
+	gameAssets.Destroy()
 
 	// free SDL resources
-	game.Renderer.Destroy()
-	game.Window.Destroy()
+	rendCont.Renderer.Destroy()
+	rendCont.Window.Destroy()
 }
 
 func EventLoop() {
 	t1 := sdl.GetTicks()
 
 	for {
-		DoEvents()
+		doEvents()
 
 		t2 := sdl.GetTicks()
-		OnUpdate(t2 - t1)
-		OnRender()
+		onUpdate(t2 - t1)
+		onRender()
 		t1 = t2
 
 		sdl.Delay(16)
-		Present()
+		present()
 
-		if game.quit {
+		if rendCont.quit {
 			break
 		}
 	}
 }
 
-func DoEvents() {
+func doEvents() {
 	for {
 		e := sdl.PollEvent()
 		if e == nil {
 			break
 		}
-		ProcessEvent(e)
+		processEvent(e)
 	}
 }
 
-func ProcessEvent(e interface{}) {
+func processEvent(e interface{}) {
 
 	switch t := e.(type) {
 	case *sdl.QuitEvent:
-		game.quit = true
+		rendCont.quit = true
 	case *sdl.KeyDownEvent:
 		switch t.Keysym.Sym {
 		case sdl.K_ESCAPE:
-			game.quit = true
+			rendCont.quit = true
 		}
 	}
 }
 
-func OnUpdate(ms uint32) {
-	game.world.Step(timeStep)
+func onUpdate(ms uint32) {
+	rendCont.world.Step(timeStep)
 }
 
-func OnRender() {
-	game.Renderer.SetDrawColor(0xe0, 0xff, 0xff, 0x00)
-	game.Renderer.Clear()
+func onRender() {
+	rendCont.Renderer.SetDrawColor(0xe0, 0xff, 0xff, 0x00)
+	rendCont.Renderer.Clear()
 	FramesPerSecond = calcFps()
-	game.renderCallback()
+	rendCont.renderCallback()
 
 }
 
-func Present() {
-	game.Renderer.Present()
+func present() {
+	rendCont.Renderer.Present()
 }
 
 func init() {

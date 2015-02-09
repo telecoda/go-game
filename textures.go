@@ -6,9 +6,9 @@ import (
 	"github.com/veandco/go-sdl2/sdl"
 )
 
-func RenderTexture(resourceId string, pos sdl.Point, textureWidth, textureHeight int32) error {
+func (r renderController) RenderTexture(resourceId string, pos sdl.Point, textureWidth, textureHeight int32) error {
 
-	image, texture, err := getImageResource(resourceId)
+	image, texture, err := gameAssets.getImageResource(resourceId)
 	if err != nil {
 		return err
 	}
@@ -19,14 +19,14 @@ func RenderTexture(resourceId string, pos sdl.Point, textureWidth, textureHeight
 	src := sdl.Rect{0, 0, width, height}
 
 	dst := sdl.Rect{pos.X, pos.Y, textureWidth, textureHeight}
-	game.Renderer.Copy(texture, &src, &dst)
+	r.Renderer.Copy(texture, &src, &dst)
 
 	return nil
 }
 
-func RenderRotatedTexture(resourceId string, pos sdl.Point, rotation float64, textureWidth, textureHeight int32) error {
+func (r renderController) RenderRotatedTexture(resourceId string, pos sdl.Point, rotation float64, textureWidth, textureHeight int32) error {
 
-	image, texture, err := getImageResource(resourceId)
+	image, texture, err := gameAssets.getImageResource(resourceId)
 	if err != nil {
 		return err
 	}
@@ -46,7 +46,7 @@ func renderRotatedTexture(texture *sdl.Texture, pos sdl.Point, rotation float64,
 	src := sdl.Rect{0, 0, width, height}
 	centre := sdl.Point{textureWidth / 2, textureHeight / 2}
 	dst := sdl.Rect{pos.X, pos.Y, textureWidth, textureHeight}
-	game.Renderer.CopyEx(texture, &src, &dst, rotation, &centre, sdl.FLIP_NONE)
+	rendCont.Renderer.CopyEx(texture, &src, &dst, rotation, &centre, sdl.FLIP_NONE)
 
 	return nil
 }
