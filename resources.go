@@ -14,6 +14,17 @@ func init() {
 
 }
 
+func initSystemFont() error {
+
+	fontRes := FontResource{Id: SYSTEM_FONT_ID, FilePath: "./test_resources/fonts/droid-sans/DroidSans.ttf", Size: 8}
+	err := gameAssets.AddFontResource(fontRes)
+	if err != nil {
+		return fmt.Errorf("Failed to load system font. Error:%s", err)
+	}
+
+	return nil
+}
+
 func (a *assets) Destroy() {
 	a.audioAssets.Destroy()
 	a.fontAssets.Destroy()
@@ -21,11 +32,13 @@ func (a *assets) Destroy() {
 	a.spriteBank.Destroy()
 }
 
-func (a *assets) Initialize() {
+func (a *assets) Initialize() error {
 	a.audioAssets = make(audioResourceMap)
 	a.fontAssets = make(fontResourceMap)
 	a.imageAssets = make(imageResourceMap)
 	a.spriteBank = make(spriteMap)
+
+	return initSystemFont()
 }
 
 // Add a font resource & loads it into memory
@@ -49,6 +62,8 @@ func (a *assets) AddFontResource(resource FontResource) error {
 
 	a.fontAssets[resource.Id] = &resource
 
+	fmt.Printf("Font:%s loaded\n", resource.Id)
+
 	return nil
 
 }
@@ -57,7 +72,7 @@ func (a *assets) getFontResource(resourceId string) (*ttf.Font, error) {
 
 	res, ok := a.fontAssets[resourceId]
 	if !ok {
-		return nil, fmt.Errorf("Error: unknown font resource:%\n ", resourceId)
+		return nil, fmt.Errorf("Error: unknown font resource:%s\n ", resourceId)
 	}
 
 	if res.font == nil {

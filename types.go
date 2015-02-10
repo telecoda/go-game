@@ -29,7 +29,7 @@ type SpriteHandler interface {
 
 // Asset handler manages all assets for a game
 type AssetHandler interface {
-	Initialize() // initialize all assets
+	Initialize() error // initialize all assets
 	FontHandler
 	ImageHandler
 	SpriteHandler

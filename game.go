@@ -11,9 +11,10 @@ import (
 )
 
 const (
-	timeStep = 1.0 / 60
-	RadToDeg = 180 / math.Pi
-	DegToRad = math.Pi / 180
+	timeStep       = 1.0 / 60
+	RadToDeg       = 180 / math.Pi
+	DegToRad       = math.Pi / 180
+	SYSTEM_FONT_ID = "system-font-id"
 )
 
 var lastFrame = time.Now()
@@ -71,7 +72,10 @@ func NewGame(winTitle string, winWidth, winHeight int, renderCallback RenderFunc
 
 	// destroy old resources first
 	gameAssets.Destroy()
-	gameAssets.Initialize()
+	err := gameAssets.Initialize()
+	if err != nil {
+		return nil, nil, err
+	}
 
 	rendCont = renderController{
 		Window:         window,
