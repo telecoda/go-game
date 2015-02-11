@@ -24,4 +24,5 @@ func (r renderController) RenderGrid(xSize, ySize int, color sdl.Color) {
 		r.Renderer.DrawLine(0, y, r.width-1, y)
 
 	}
+
 }

@@ -6,9 +6,9 @@ import (
 	sdl "github.com/veandco/go-sdl2/sdl"
 )
 
-func (r renderController) RenderText(resourceId string, text string, pos sdl.Point, textColor sdl.Color) error {
+func (r renderController) RenderText(assetId string, text string, pos sdl.Point, textColor sdl.Color) error {
 
-	font, err := gameAssets.getFontResource(resourceId)
+	font, err := gameAssets.getFontAsset(assetId)
 	if err != nil {
 		return err
 	}

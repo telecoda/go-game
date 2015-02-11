@@ -19,12 +19,14 @@ func TestRenderGrid(t *testing.T) {
 	}
 
 	renderColor := sdl.Color{R: 255, G: 0, B: 0, A: 255}
-	backgroundColor := sdl.Color{R: 1, G: 2, B: 3, A: 4}
+	backgroundColor := sdl.Color{R: 0, G: 255, B: 0, A: 255}
 
-	clearScreen(backgroundColor)
+	renderController.ClearScreen(backgroundColor)
 	renderController.RenderGrid(5, 5, renderColor)
 
 	pixelColor, err := getPixelColorAt(sdl.Point{0, 0})
+
+	rendCont.Renderer.Present()
 
 	if err != nil {
 		t.Fatalf("Error was not expected and got: %s", err)

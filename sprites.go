@@ -20,8 +20,8 @@ func (a *assets) AddSprite(spriteId string, sprite *Sprite) error {
 		return fmt.Errorf("Error: sprite pointer is nil")
 	}
 
-	if sprite.ImageResourceId != "" {
-		err := sprite.SetImage(sprite.ImageResourceId)
+	if sprite.ImageAssetId != "" {
+		err := sprite.SetImage(sprite.ImageAssetId)
 		if err != nil {
 			return err
 		}
@@ -39,7 +39,7 @@ func (a *assets) GetSprite(spriteId string) (*Sprite, error) {
 
 	sprite, ok := a.spriteBank[spriteId]
 	if !ok {
-		return nil, fmt.Errorf("Warning: unknown sprite resource:%s\n ", spriteId)
+		return nil, fmt.Errorf("Warning: unknown sprite asset:%s\n ", spriteId)
 	}
 
 	if sprite == nil {
@@ -70,14 +70,14 @@ func (s *Sprite) EnablePhysics(mass float64) {
 
 }
 
-func (s *Sprite) SetImage(resourceId string) error {
+func (s *Sprite) SetImage(assetId string) error {
 
-	image, texture, err := gameAssets.getImageResource(resourceId)
+	image, texture, err := gameAssets.getImageAsset(assetId)
 	if err != nil {
 		return err
 	}
 
-	s.ImageResourceId = resourceId
+	s.ImageAssetId = assetId
 	s.image = image
 	s.texture = texture
 
@@ -88,7 +88,7 @@ func (r renderController) RenderSprite(spriteId string) error {
 
 	sprite, ok := gameAssets.spriteBank[spriteId]
 	if !ok {
-		return fmt.Errorf("aWarning: unknown sprite resource:%s\n ", spriteId)
+		return fmt.Errorf("aWarning: unknown sprite asset:%s\n ", spriteId)
 	}
 
 	return sprite.render()

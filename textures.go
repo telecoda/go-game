@@ -6,9 +6,9 @@ import (
 	"github.com/veandco/go-sdl2/sdl"
 )
 
-func (r renderController) RenderTexture(resourceId string, pos sdl.Point, textureWidth, textureHeight int32) error {
+func (r renderController) RenderTexture(assetId string, pos sdl.Point, textureWidth, textureHeight int32) error {
 
-	image, texture, err := gameAssets.getImageResource(resourceId)
+	image, texture, err := gameAssets.getImageAsset(assetId)
 	if err != nil {
 		return err
 	}
@@ -24,9 +24,9 @@ func (r renderController) RenderTexture(resourceId string, pos sdl.Point, textur
 	return nil
 }
 
-func (r renderController) RenderRotatedTexture(resourceId string, pos sdl.Point, rotation float64, textureWidth, textureHeight int32) error {
+func (r renderController) RenderRotatedTexture(assetId string, pos sdl.Point, rotation float64, textureWidth, textureHeight int32) error {
 
-	image, texture, err := gameAssets.getImageResource(resourceId)
+	image, texture, err := gameAssets.getImageAsset(assetId)
 	if err != nil {
 		return err
 	}
@@ -49,4 +49,9 @@ func renderRotatedTexture(texture *sdl.Texture, pos sdl.Point, rotation float64,
 	rendCont.Renderer.CopyEx(texture, &src, &dst, rotation, &centre, sdl.FLIP_NONE)
 
 	return nil
+}
+
+func (r renderController) ClearScreen(color sdl.Color) {
+	r.Renderer.SetDrawColor(color.R, color.G, color.B, color.A)
+	r.Renderer.Clear()
 }

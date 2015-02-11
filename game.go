@@ -21,38 +21,37 @@ var lastFrame = time.Now()
 
 var gameAssets *assets
 
-//var spriteLayers SpriteLayers
-
-var rendCont renderController
+var rendCont *renderController
+var eventHnd *eventHandler
 
 var FramesPerSecond = 0.0
 
 func init() {
-	// init global library resources
+	// init global library assets
 
 	gameAssets = &assets{}
 	gameAssets.Initialize()
 }
 
-func NewGame(winTitle string, winWidth, winHeight int, renderCallback RenderFunction) (AssetHandler, RenderController, error) {
+func NewGame(winTitle string, winWidth, winHeight int, renderCallback RenderFunction, eventCallback EventReceiverFunction) (AssetManager, RenderController, EventHandler, error) {
 	window, _ := sdl.CreateWindow(
 		winTitle, sdl.WINDOWPOS_CENTERED, sdl.WINDOWPOS_CENTERED,
 		winWidth, winHeight, sdl.WINDOW_OPENGL)
 
 	if winTitle == "" {
-		return nil, nil, fmt.Errorf("Error: window must have a title.")
+		return nil, nil, nil, fmt.Errorf("Error: window must have a title.")
 	}
 
 	if winWidth < 1 {
-		return nil, nil, fmt.Errorf("Error: window width must be greater than 0.")
+		return nil, nil, nil, fmt.Errorf("Error: window width must be greater than 0.")
 	}
 
 	if winHeight < 1 {
-		return nil, nil, fmt.Errorf("Error: window height must be greater than 0.")
+		return nil, nil, nil, fmt.Errorf("Error: window height must be greater than 0.")
 	}
 
 	if window == nil {
-		return nil, nil, fmt.Errorf("Error: window not created")
+		return nil, nil, nil, fmt.Errorf("Error: window not created")
 	}
 
 	// try acceleration first
@@ -61,7 +60,7 @@ func NewGame(winTitle string, winWidth, winHeight int, renderCallback RenderFunc
 		// revert to software
 		renderer, _ := sdl.CreateRenderer(window, -2, sdl.RENDERER_SOFTWARE)
 		if renderer == nil {
-			return nil, nil, fmt.Errorf("Error: rendered not created")
+			return nil, nil, nil, fmt.Errorf("Error: rendered not created")
 		}
 	}
 
@@ -70,14 +69,14 @@ func NewGame(winTitle string, winWidth, winHeight int, renderCallback RenderFunc
 	world := b2d.NewWorld(gravity, iterations)
 	world.Clear()
 
-	// destroy old resources first
+	// destroy old assets first
 	gameAssets.Destroy()
 	err := gameAssets.Initialize()
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, nil, err
 	}
 
-	rendCont = renderController{
+	rendCont = &renderController{
 		Window:         window,
 		Renderer:       renderer,
 		renderCallback: renderCallback,
@@ -88,14 +87,26 @@ func NewGame(winTitle string, winWidth, winHeight int, renderCallback RenderFunc
 		RenderBoxes:    true,
 	}
 
-	return gameAssets, rendCont, nil
+	eventHnd = &eventHandler{
+		eventCallback: eventCallback,
+	}
+
+	return gameAssets, rendCont, eventHnd, nil
+}
+
+func (r *renderController) SetCallback(callback RenderFunction) {
+	r.renderCallback = callback
+}
+
+func (e *eventHandler) SetCallback(callback EventReceiverFunction) {
+	e.eventCallback = callback
 }
 
 func Destroy() {
-	// free resources
+	// free assets
 	gameAssets.Destroy()
 
-	// free SDL resources
+	// free SDL assets
 	rendCont.Renderer.Destroy()
 	rendCont.Window.Destroy()
 }
@@ -132,6 +143,10 @@ func doEvents() {
 
 func processEvent(e interface{}) {
 
+	if eventHnd.eventCallback != nil {
+		eventHnd.eventCallback(e)
+	}
+
 	switch t := e.(type) {
 	case *sdl.QuitEvent:
 		rendCont.quit = true
@@ -151,7 +166,12 @@ func onRender() {
 	rendCont.Renderer.SetDrawColor(0xe0, 0xff, 0xff, 0x00)
 	rendCont.Renderer.Clear()
 	FramesPerSecond = calcFps()
-	rendCont.renderCallback()
+
+	if rendCont.renderCallback != nil {
+
+		rendCont.renderCallback()
+
+	}
 
 }
 

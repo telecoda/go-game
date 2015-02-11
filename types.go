@@ -12,32 +12,32 @@ type GameEngine interface {
 	EventLoop()
 }
 
-type FontHandler interface {
-	AddFontResource(resource FontResource) error // add a font
-	getFontResource(resourceId string) (*ttf.Font, error)
+type FontManager interface {
+	AddFontAsset(asset FontAsset) error // add a font
+	getFontAsset(assetId string) (*ttf.Font, error)
 }
 
-type ImageHandler interface {
-	AddImageResource(resource ImageResource) error // add an image
-	getImageResource(resourceId string) (*sdl.Surface, *sdl.Texture, error)
+type ImageManager interface {
+	AddImageAsset(asset ImageAsset) error // add an image
+	getImageAsset(assetId string) (*sdl.Surface, *sdl.Texture, error)
 }
 
-type SpriteHandler interface {
+type SpriteManager interface {
 	AddSprite(spriteId string, sprite *Sprite) error
 	GetSprite(spriteId string) (*Sprite, error)
 }
 
-// Asset handler manages all assets for a game
-type AssetHandler interface {
+// Asset manager manages all assets for a game
+type AssetManager interface {
 	Initialize() error // initialize all assets
-	FontHandler
-	ImageHandler
-	SpriteHandler
-	Destroy() // free all resources
+	FontManager
+	ImageManager
+	SpriteManager
+	Destroy() // free all assets
 }
 
 type FontRenderer interface {
-	RenderText(resourceId string, text string, pos sdl.Point, textColor sdl.Color) error
+	RenderText(assetId string, text string, pos sdl.Point, textColor sdl.Color) error
 }
 
 type SpriteRenderer interface {
@@ -54,19 +54,25 @@ type GridRenderer interface {
 }
 
 type TextureRenderer interface {
-	RenderTexture(resourceId string, pos sdl.Point, textureWidth, textureHeight int32) error
-	RenderRotatedTexture(resourceId string, pos sdl.Point, rotation float64, textureWidth, textureHeight int32) error
+	RenderTexture(assetId string, pos sdl.Point, textureWidth, textureHeight int32) error
+	RenderRotatedTexture(assetId string, pos sdl.Point, rotation float64, textureWidth, textureHeight int32) error
 }
 
 type RenderController interface {
+	ClearScreen(color sdl.Color)
 	FontRenderer
 	SpriteRenderer
 	GridRenderer
 	LayerRenderer
 	TextureRenderer
+	SetCallback(callback RenderFunction)
 }
 
-type FontResource struct {
+type EventHandler interface {
+	SetCallback(calllback EventReceiverFunction)
+}
+
+type FontAsset struct {
 	Id       string
 	FilePath string
 	Size     int
@@ -74,7 +80,7 @@ type FontResource struct {
 	font     *ttf.Font
 }
 
-type ImageResource struct {
+type ImageAsset struct {
 	Id       string
 	FilePath string
 	loaded   bool
@@ -82,25 +88,26 @@ type ImageResource struct {
 	texture  *sdl.Texture
 }
 
-type AudioResource struct {
+type AudioAsset struct {
 	Id       string
 	FilePath string
 	loaded   bool
 }
 
 type assets struct {
-	audioAssets audioResourceMap
-	fontAssets  fontResourceMap
-	imageAssets imageResourceMap
+	audioAssets audioAssetMap
+	fontAssets  fontAssetMap
+	imageAssets imageAssetMap
 	spriteBank  spriteMap
 }
 
-type audioResourceMap map[string]*AudioResource
-type fontResourceMap map[string]*FontResource
-type imageResourceMap map[string]ImageResource
+type audioAssetMap map[string]*AudioAsset
+type fontAssetMap map[string]*FontAsset
+type imageAssetMap map[string]ImageAsset
 type spriteMap map[string]*Sprite
 
 type RenderFunction func()
+type EventReceiverFunction func(e interface{})
 
 type renderController struct {
 	Window          *sdl.Window
@@ -115,16 +122,20 @@ type renderController struct {
 	FramesPerSecond float64
 }
 
+type eventHandler struct {
+	eventCallback EventReceiverFunction
+}
+
 type Sprite struct {
-	Id              string
-	Pos             sdl.Point
-	Width           int32
-	Height          int32
-	Rotation        float64
-	Visible         bool
-	ImageResourceId string
-	image           *sdl.Surface
-	texture         *sdl.Texture
+	Id           string
+	Pos          sdl.Point
+	Width        int32
+	Height       int32
+	Rotation     float64
+	Visible      bool
+	ImageAssetId string
+	image        *sdl.Surface
+	texture      *sdl.Texture
 
 	applyPhysics bool
 	mass         float64

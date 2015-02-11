@@ -7,11 +7,6 @@ import (
 	sdl "github.com/veandco/go-sdl2/sdl"
 )
 
-func clearScreen(color sdl.Color) {
-	rendCont.Renderer.SetDrawColor(color.R, color.G, color.B, color.A)
-	rendCont.Renderer.Clear()
-}
-
 func readPixels(rect *sdl.Rect, pixels unsafe.Pointer) error {
 
 	format := rendCont.Window.GetPixelFormat()
@@ -24,7 +19,7 @@ func readPixels(rect *sdl.Rect, pixels unsafe.Pointer) error {
 
 func getSurfaceFromFont() (*sdl.Surface, error) {
 
-	font, err := gameAssets.getFontResource(SYSTEM_FONT_ID)
+	font, err := gameAssets.getFontAsset(SYSTEM_FONT_ID)
 	if err != nil {
 		return nil, err
 	}
@@ -45,6 +40,8 @@ func getPixelColorAt(point sdl.Point) (*sdl.Color, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	fmt.Printf("Pixel format:%v\n", pixelFormat)
 
 	rect := sdl.Rect{0, 0, int32(rendCont.width), int32(rendCont.height)}
 
