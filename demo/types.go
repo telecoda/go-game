@@ -6,11 +6,13 @@ import (
 )
 
 type initAssetsFunction func() error
+type unloadAssetsFunction func() error
 
 type DemoScreen struct {
 	Id             int
 	Title          string
 	Color          sdl.Color
 	InitAssets     initAssetsFunction
+	UnloadAssets   unloadAssetsFunction
 	RenderCallback gogame.RenderFunction
 }

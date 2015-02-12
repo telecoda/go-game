@@ -2,6 +2,7 @@ package gogame
 
 import (
 	"fmt"
+	"runtime"
 	"unsafe"
 
 	sdl "github.com/veandco/go-sdl2/sdl"
@@ -19,7 +20,7 @@ func readPixels(rect *sdl.Rect, pixels unsafe.Pointer) error {
 
 func getSurfaceFromFont() (*sdl.Surface, error) {
 
-	font, err := gameAssets.getFontAsset(SYSTEM_FONT_ID)
+	font, err := gameAssets.getFont(SYSTEM_FONT_ID)
 	if err != nil {
 		return nil, err
 	}
@@ -60,4 +61,18 @@ func getPixelColorAt(point sdl.Point) (*sdl.Color, error) {
 	r, g, b, a := sdl.GetRGBA(pixel, pixelFormat)
 
 	return &sdl.Color{A: a, R: r, G: g, B: b}, nil
+}
+
+// prints memory usage to the stdout
+func ReportMemoryUsage() {
+
+	fmt.Printf("Memory Usage\n")
+	fmt.Printf("------------\n")
+	m := runtime.MemStats{}
+	runtime.ReadMemStats(&m)
+
+	fmt.Printf("Memory allocated in use:%d\n", m.Alloc)
+	fmt.Printf("Memory total allocated :%d\n", m.TotalAlloc)
+	fmt.Printf("Memory heap            :%d\n", m.HeapAlloc)
+	fmt.Printf("Memory next GC         :%d\n", m.NextGC)
 }

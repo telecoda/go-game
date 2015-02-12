@@ -13,8 +13,11 @@ type GameEngine interface {
 }
 
 type FontManager interface {
-	AddFontAsset(asset FontAsset) error // add a font
-	getFontAsset(assetId string) (*ttf.Font, error)
+	AddFontAsset(asset FontAsset, load bool) error // add a font
+	LoadFontAsset(assetId string) error
+	UnloadFontAsset(assetId string) error
+	//getFontAsset(assetId string) (*ttf.Font, error)
+
 }
 
 type ImageManager interface {

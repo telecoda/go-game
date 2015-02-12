@@ -15,10 +15,11 @@ import (
 var gameWidth = 1024
 var gameHeight = 800
 
-var screenId = 0
+var currentDemoScreenId int
 
 var demoScreens map[int]*DemoScreen
 var demoScreen *DemoScreen
+
 var assetHandler gogame.AssetManager
 var renderController gogame.RenderController
 var eventHandler gogame.EventHandler
@@ -38,11 +39,14 @@ func main() {
 	defer gogame.Destroy()
 
 	// start with demo 1
-	demoScreen = demoScreens[0]
+	currentDemoScreenId = 0
+	demoScreen = demoScreens[currentDemoScreenId]
+	err = demoScreen.activate()
 
-	demoScreen.InitAssets()
-	renderController.SetCallback(demoScreen.RenderCallback)
-
+	if err != nil {
+		fmt.Printf("Error activating screen:%s. Program exit.\n", err)
+		return
+	}
 	// start main event loop
 	gogame.EventLoop()
 
@@ -54,57 +58,59 @@ func demoEventReceiver(e interface{}) {
 	case *sdl.KeyDownEvent:
 		switch t.Keysym.Sym {
 		case sdl.K_SPACE:
-			fmt.Printf("SPACE pressed\n")
+			err := nextDemo()
+			if err != nil {
+				fmt.Printf("Error switching demos :%s", err)
+			}
 		}
 	}
+}
+
+func nextDemo() error {
+	nextDemoScreenId := currentDemoScreenId + 1
+
+	if nextDemoScreenId > len(demoScreens)-1 {
+		currentDemoScreenId = 0
+	} else {
+		currentDemoScreenId = nextDemoScreenId
+	}
+
+	previousDemoScreen := demoScreen
+	demoScreen = demoScreens[currentDemoScreenId]
+	err := demoScreen.activate()
+	if err != nil {
+		return err
+	}
+
+	err = previousDemoScreen.UnloadAssets()
+	if err != nil {
+		return err
+	}
+
+	gogame.ReportMemoryUsage()
+
+	return nil
+
+}
+
+// make this screen the current one being rendered by the renderer
+func (d DemoScreen) activate() error {
+	err := demoScreen.InitAssets()
+	if err != nil {
+		return err
+	}
+	renderController.SetCallback(d.RenderCallback)
+
+	return nil
 }
 
 func initDemoScreens() {
 
 	demoScreens = make(map[int]*DemoScreen)
 
-	demoScreens[0] = &DemoScreen{Id: 0, Title: "Title screen", Color: sdl.Color{R: 255, G: 255, B: 255, A: 255}, InitAssets: initDemo0Assets, RenderCallback: demo0RenderCallback}
-	demoScreens[1] = &DemoScreen{Id: 1, Title: "Text demo", Color: sdl.Color{R: 0, G: 0, B: 0, A: 255}, InitAssets: initDemo1Assets, RenderCallback: demo1RenderCallback}
-	demoScreens[2] = &DemoScreen{Id: 2, Title: "Credits screen", Color: sdl.Color{R: 128, G: 128, B: 128, A: 255}, InitAssets: initDemo2Assets, RenderCallback: demo1RenderCallback}
-
-}
-
-// init assets for demo 0
-func initDemo0Assets() error {
-	return nil
-}
-
-// render screen for demo 0
-func demo0RenderCallback() {
-	renderController.ClearScreen(demoScreen.Color)
-	renderController.RenderText(DROID_SANS_16, "Test text", sdl.Point{20, 60}, black)
-	renderController.RenderText(DROID_SANS_48, "Test text", sdl.Point{20, 80}, red)
-
-}
-
-// init assets for demo 1
-func initDemo1Assets() error {
-	return nil
-}
-
-// render screen for demo 1
-func demo1RenderCallback() {
-	renderController.ClearScreen(demoScreen.Color)
-	renderController.RenderText(DROID_SANS_16, "Test text", sdl.Point{20, 60}, black)
-	renderController.RenderText(DROID_SANS_48, "Test text", sdl.Point{20, 80}, red)
-
-}
-
-// init assets for demo 2
-func initDemo2Assets() error {
-	return nil
-}
-
-// render screen for demo 2
-func demo2RenderCallback() {
-	renderController.ClearScreen(demoScreen.Color)
-	renderController.RenderText(DROID_SANS_16, "Test text", sdl.Point{20, 60}, black)
-	renderController.RenderText(DROID_SANS_48, "Test text", sdl.Point{20, 80}, red)
+	demoScreens[0] = &DemoScreen{Id: 0, Title: "Title screen", Color: sdl.Color{R: 255, G: 255, B: 255, A: 255}, InitAssets: initDemo0Assets, UnloadAssets: unloadDemo0Assets, RenderCallback: demo0RenderCallback}
+	demoScreens[1] = &DemoScreen{Id: 1, Title: "Text demo", Color: sdl.Color{R: 0, G: 0, B: 0, A: 255}, InitAssets: initDemo1Assets, UnloadAssets: unloadDemo1Assets, RenderCallback: demo1RenderCallback}
+	demoScreens[2] = &DemoScreen{Id: 2, Title: "Credits screen", Color: sdl.Color{R: 128, G: 128, B: 128, A: 255}, InitAssets: initDemo2Assets, UnloadAssets: unloadDemo2Assets, RenderCallback: demo1RenderCallback}
 
 }
 

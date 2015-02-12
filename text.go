@@ -8,7 +8,7 @@ import (
 
 func (r renderController) RenderText(assetId string, text string, pos sdl.Point, textColor sdl.Color) error {
 
-	font, err := gameAssets.getFontAsset(assetId)
+	font, err := gameAssets.getFont(assetId)
 	if err != nil {
 		return err
 	}
