@@ -15,9 +15,9 @@ const (
 )
 
 var demo0fonts = []gogame.FontAsset{
-	{Id: DEMO0_FONT_8, FilePath: "./demo_assets/fonts/droid-sans/DroidSans.ttf", Size: 8},
-	{Id: DEMO0_FONT_16, FilePath: "./demo_assets/fonts/droid-sans/DroidSans.ttf", Size: 16},
-	{Id: DEMO0_FONT_48, FilePath: "./demo_assets/fonts/droid-sans/DroidSans.ttf", Size: 48},
+	{BaseAsset: gogame.BaseAsset{Id: DEMO0_FONT_8, FilePath: "./demo_assets/fonts/droid-sans/DroidSans.ttf"}, Size: 8},
+	{BaseAsset: gogame.BaseAsset{Id: DEMO0_FONT_16, FilePath: "./demo_assets/fonts/droid-sans/DroidSans.ttf"}, Size: 16},
+	{BaseAsset: gogame.BaseAsset{Id: DEMO0_FONT_48, FilePath: "./demo_assets/fonts/droid-sans/DroidSans.ttf"}, Size: 48},
 }
 
 // init assets for demo 0
@@ -25,8 +25,8 @@ func initDemo0Assets() error {
 
 	fmt.Printf("Loading Demo0 assets\n")
 
-	for _, fontRes := range demo0fonts {
-		err := assetHandler.AddFontAsset(fontRes, true)
+	for _, fontAsset := range demo0fonts {
+		err := assetHandler.AddFontAsset(fontAsset, true)
 		if err != nil {
 			return fmt.Errorf("Error occurred whilst adding a font asset:%s", err)
 		}
@@ -41,7 +41,7 @@ func unloadDemo0Assets() error {
 	fmt.Printf("Unloading Demo0 assets\n")
 
 	for _, fontRes := range demo0fonts {
-		err := assetHandler.UnloadFontAsset(fontRes.Id)
+		err := fontRes.Unload()
 		if err != nil {
 			return fmt.Errorf("Error occurred whilst unloading a font asset:%s", err)
 		}

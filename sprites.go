@@ -72,7 +72,7 @@ func (s *Sprite) EnablePhysics(mass float64) {
 
 func (s *Sprite) SetImage(assetId string) error {
 
-	image, texture, err := gameAssets.getImageAsset(assetId)
+	image, texture, err := getImage(assetId)
 	if err != nil {
 		return err
 	}

@@ -12,17 +12,20 @@ type GameEngine interface {
 	EventLoop()
 }
 
+type Asset interface {
+	Add() error
+	save() error
+	Load() error
+	Unload() error
+	Destroy() error
+}
+
 type FontManager interface {
 	AddFontAsset(asset FontAsset, load bool) error // add a font
-	LoadFontAsset(assetId string) error
-	UnloadFontAsset(assetId string) error
-	//getFontAsset(assetId string) (*ttf.Font, error)
-
 }
 
 type ImageManager interface {
-	AddImageAsset(asset ImageAsset) error // add an image
-	getImageAsset(assetId string) (*sdl.Surface, *sdl.Texture, error)
+	AddImageAsset(asset ImageAsset, load bool) error // add an image
 }
 
 type SpriteManager interface {
@@ -75,26 +78,26 @@ type EventHandler interface {
 	SetCallback(calllback EventReceiverFunction)
 }
 
-type FontAsset struct {
+type BaseAsset struct {
 	Id       string
 	FilePath string
-	Size     int
 	loaded   bool
-	font     *ttf.Font
+}
+
+type FontAsset struct {
+	BaseAsset
+	Size int
+	font *ttf.Font
 }
 
 type ImageAsset struct {
-	Id       string
-	FilePath string
-	loaded   bool
-	image    *sdl.Surface
-	texture  *sdl.Texture
+	BaseAsset
+	image   *sdl.Surface
+	texture *sdl.Texture
 }
 
 type AudioAsset struct {
-	Id       string
-	FilePath string
-	loaded   bool
+	BaseAsset
 }
 
 type assets struct {
@@ -106,7 +109,7 @@ type assets struct {
 
 type audioAssetMap map[string]*AudioAsset
 type fontAssetMap map[string]*FontAsset
-type imageAssetMap map[string]ImageAsset
+type imageAssetMap map[string]*ImageAsset
 type spriteMap map[string]*Sprite
 
 type RenderFunction func()

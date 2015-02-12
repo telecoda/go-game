@@ -20,7 +20,7 @@ func readPixels(rect *sdl.Rect, pixels unsafe.Pointer) error {
 
 func getSurfaceFromFont() (*sdl.Surface, error) {
 
-	font, err := gameAssets.getFont(SYSTEM_FONT_ID)
+	font, err := getFont(SYSTEM_FONT_ID)
 	if err != nil {
 		return nil, err
 	}

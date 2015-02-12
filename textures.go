@@ -8,7 +8,7 @@ import (
 
 func (r renderController) RenderTexture(assetId string, pos sdl.Point, textureWidth, textureHeight int32) error {
 
-	image, texture, err := gameAssets.getImageAsset(assetId)
+	image, texture, err := getImage(assetId)
 	if err != nil {
 		return err
 	}
@@ -26,7 +26,7 @@ func (r renderController) RenderTexture(assetId string, pos sdl.Point, textureWi
 
 func (r renderController) RenderRotatedTexture(assetId string, pos sdl.Point, rotation float64, textureWidth, textureHeight int32) error {
 
-	image, texture, err := gameAssets.getImageAsset(assetId)
+	image, texture, err := getImage(assetId)
 	if err != nil {
 		return err
 	}

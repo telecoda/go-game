@@ -14,17 +14,6 @@ func init() {
 
 }
 
-/*func initSystemFont() error {
-
-	fontRes := FontAsset{Id: SYSTEM_FONT_ID, FilePath: "./test_assets/fonts/droid-sans/DroidSans.ttf", Size: 8}
-	err := gameAssets.AddFontAsset(fontRes)
-	if err != nil {
-		return fmt.Errorf("Failed to load system font. Error:%s", err)
-	}
-
-	return nil
-}*/
-
 func (a *assets) Destroy() {
 	a.audioAssets.Destroy()
 	a.fontAssets.Destroy()
@@ -38,30 +27,11 @@ func (a *assets) Initialize() error {
 	a.imageAssets = make(imageAssetMap)
 	a.spriteBank = make(spriteMap)
 
-	//return initSystemFont()
 	return nil
 }
 
 // Add a font asset & loads it into memory
 func (a *assets) AddFontAsset(asset FontAsset, load bool) error {
-
-	/*
-		asset.loaded = false
-
-		font, err := ttf.OpenFont(asset.FilePath, asset.Size)
-		if err != nil {
-			return fmt.Errorf("Error in AddFontAsset:%s", err)
-		}
-
-		if asset.Size < 1 {
-			return fmt.Errorf("Error: font size must be larger than %d", asset.Size)
-		}
-
-		if font != nil {
-			asset.font = font
-			asset.loaded = true
-		}
-	*/
 
 	if asset.Size < 1 {
 		return fmt.Errorf("Error: font size must be larger than %d", asset.Size)
@@ -70,7 +40,7 @@ func (a *assets) AddFontAsset(asset FontAsset, load bool) error {
 	asset.loaded = false
 
 	if load {
-		err := a.loadFont(&asset)
+		err := asset.Load()
 		if err != nil {
 			return err
 		}
@@ -78,55 +48,67 @@ func (a *assets) AddFontAsset(asset FontAsset, load bool) error {
 
 	fmt.Printf("Adding font:%s \n", asset.Id)
 
-	return a.saveFontAsset(&asset)
+	return asset.Save()
 
 }
 
-func (a *assets) LoadFontAsset(assetId string) error {
+func (a *FontAsset) Add(load bool) error {
 
-	asset, err := a.getFontAsset(assetId)
-	if err != nil {
-		return err
+	if a.Size < 1 {
+		return fmt.Errorf("Error: font size must be larger than %d", a.Size)
 	}
 
-	err = gameAssets.loadFont(asset)
-	if err != nil {
-		return err
+	a.loaded = false
+
+	if load {
+		err := a.Load()
+		if err != nil {
+			return err
+		}
 	}
 
-	return a.saveFontAsset(asset)
+	fmt.Printf("Adding font:%s \n", a.Id)
+
+	return a.Save()
 
 }
 
-func (a *assets) loadFont(asset *FontAsset) error {
+func (a *FontAsset) Save() error {
 
-	font, err := ttf.OpenFont(asset.FilePath, asset.Size)
-	if err != nil {
-		return fmt.Errorf("Error in LoadFontAsset:%s", err)
-	}
-
-	if font != nil {
-		asset.font = font
-		asset.loaded = true
-	}
+	gameAssets.fontAssets[a.Id] = a
 
 	return nil
 
 }
 
-func (a *assets) UnloadFontAsset(assetId string) error {
+func (a *FontAsset) Load() error {
 
-	asset, err := a.getFontAsset(assetId)
-	if err != nil {
-		return err
+	// already loaded
+	if a.loaded {
+		return nil
 	}
 
-	if asset.loaded {
-		if asset.font != nil {
-			fmt.Printf("Unloading font asset:%s\n", asset.Id)
-			asset.font.Close()
-			asset.loaded = false
-			err = a.saveFontAsset(asset)
+	font, err := ttf.OpenFont(a.FilePath, a.Size)
+	if err != nil {
+		return fmt.Errorf("Error in LoadFontAsset:%s", err)
+	}
+
+	if font != nil {
+		a.font = font
+		a.loaded = true
+	}
+
+	return a.Save()
+}
+
+func (a *FontAsset) Unload() error {
+
+	if a.loaded {
+		if a.font != nil {
+			fmt.Printf("Unloading font asset:%s\n", a.Id)
+			a.font.Close()
+			a.loaded = false
+			err := a.Save()
 			if err != nil {
 				return err
 			}
@@ -136,28 +118,17 @@ func (a *assets) UnloadFontAsset(assetId string) error {
 	return nil
 }
 
-func (a *assets) saveFontAsset(asset *FontAsset) error {
-
-	if asset == nil {
-		return fmt.Errorf("Error: trying to save a nil font asset")
-	}
-	a.fontAssets[asset.Id] = asset
-
-	return nil
-
-}
-
-func (a *assets) getFontAsset(assetId string) (*FontAsset, error) {
-	res, ok := a.fontAssets[assetId]
+func getFontAsset(assetId string) (*FontAsset, error) {
+	asset, ok := gameAssets.fontAssets[assetId]
 	if !ok {
 		return nil, fmt.Errorf("Error: unknown font asset:%s\n ", assetId)
 	}
-	return res, nil
+	return asset, nil
 }
 
-func (a *assets) getFont(assetId string) (*ttf.Font, error) {
+func getFont(assetId string) (*ttf.Font, error) {
 
-	asset, err := a.getFontAsset(assetId)
+	asset, err := getFontAsset(assetId)
 	if err != nil {
 		return nil, err
 	}
@@ -174,17 +145,44 @@ func (f fontAssetMap) Destroy() {
 
 	for _, asset := range f {
 		fmt.Printf("Destroying font asset:%s\n", asset.Id)
-		gameAssets.UnloadFontAsset(asset.Id)
+		asset.Unload()
 	}
 
 }
 
 // Add an image asset & loads it into memory
-func (a *assets) AddImageAsset(asset ImageAsset) error {
+func (a *assets) AddImageAsset(asset ImageAsset, load bool) error {
 
 	asset.loaded = false
 
-	image, err := img.Load(asset.FilePath)
+	if load {
+		err := asset.Load()
+		if err != nil {
+			return err
+		}
+
+	}
+
+	return asset.Save()
+
+}
+
+func (a *ImageAsset) Save() error {
+
+	gameAssets.imageAssets[a.Id] = a
+
+	return nil
+
+}
+
+func (a *ImageAsset) Load() error {
+
+	// already loaded
+	if a.loaded {
+		return nil
+	}
+
+	image, err := img.Load(a.FilePath)
 	if err != nil {
 		return fmt.Errorf("Failed to load image: %s\n", err)
 
@@ -194,32 +192,55 @@ func (a *assets) AddImageAsset(asset ImageAsset) error {
 		return fmt.Errorf("Failed to create texture: %s\n", err)
 	}
 
-	asset.image = image
-	asset.texture = texture
-	asset.loaded = true
+	a.image = image
+	a.texture = texture
+	a.loaded = true
 
-	a.imageAssets[asset.Id] = asset
-
-	return nil
-
+	return a.Save()
 }
 
-func (a *assets) getImageAsset(assetId string) (*sdl.Surface, *sdl.Texture, error) {
+func (a *ImageAsset) Unload() error {
 
-	res, ok := a.imageAssets[assetId]
+	if a.loaded {
+		if a.image != nil {
+			fmt.Printf("Unloading image asset:%s\n", a.Id)
+			a.image.Free()
+			a.texture.Destroy()
+			a.loaded = false
+			err := a.Save()
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	return nil
+}
+
+func getImageAsset(assetId string) (*ImageAsset, error) {
+	asset, ok := gameAssets.imageAssets[assetId]
+	if !ok {
+		return nil, fmt.Errorf("Error: unknown image asset:%s\n ", assetId)
+	}
+	return asset, nil
+}
+
+func getImage(assetId string) (*sdl.Surface, *sdl.Texture, error) {
+
+	asset, ok := gameAssets.imageAssets[assetId]
 	if !ok {
 		return nil, nil, fmt.Errorf("Warning: unknown image asset:%\n ", assetId)
 	}
 
-	if res.image == nil {
+	if asset.image == nil {
 		return nil, nil, fmt.Errorf("Warning: image not loaded:%\n ", assetId)
 	}
 
-	if res.texture == nil {
+	if asset.texture == nil {
 		return nil, nil, fmt.Errorf("Warning: texture not loaded:%\n ", assetId)
 	}
 
-	return res.image, res.texture, nil
+	return asset.image, asset.texture, nil
 }
 
 func (a audioAssetMap) Destroy() {
@@ -232,10 +253,9 @@ func (a audioAssetMap) Destroy() {
 
 func (i imageAssetMap) Destroy() {
 
-	for _, res := range i {
-		fmt.Printf("Freeing image asset:%s\n", res.Id)
-		res.image.Free()
-		res.texture.Destroy()
+	for _, asset := range i {
+		fmt.Printf("Freeing image asset:%s\n", asset.Id)
+		asset.Unload()
 	}
 
 }
