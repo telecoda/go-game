@@ -13,7 +13,7 @@ type GameEngine interface {
 }
 
 type Asset interface {
-	Add() error
+	Add(load bool) error
 	save() error
 	Load() error
 	Unload() error
