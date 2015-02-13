@@ -43,7 +43,7 @@ type AssetManager interface {
 }
 
 type FontRenderer interface {
-	RenderText(assetId string, text string, pos sdl.Point, textColor sdl.Color) error
+	RenderText(assetId string, text string, pos sdl.Point, textColor sdl.Color, vAlign VAlign, hAlign HAlign) error
 }
 
 type SpriteRenderer interface {
