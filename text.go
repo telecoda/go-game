@@ -30,7 +30,12 @@ func (r renderController) RenderText(assetId string, text string, pos sdl.Point,
 	if err != nil {
 		return err
 	}
-	textSurface := font.RenderText_Solid(text, textColor)
+
+	//font.SetOutline(2)
+	textSurface := font.RenderText_Blended(text, textColor)
+	//backColor := sdl.Color{R: 255, G: 0, B: 0, A: 255}
+	//textSurface := font.RenderText_Shaded(text, textColor, backColor)
+
 	texture, err := r.Renderer.CreateTextureFromSurface(textSurface)
 	defer textSurface.Free()
 	defer texture.Destroy()

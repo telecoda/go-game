@@ -30,7 +30,6 @@ func (a *assets) Initialize() error {
 	return nil
 }
 
-// Add a font asset & loads it into memory
 func (a *assets) AddFontAsset(asset FontAsset, load bool) error {
 
 	if asset.Size < 1 {
@@ -48,32 +47,11 @@ func (a *assets) AddFontAsset(asset FontAsset, load bool) error {
 
 	fmt.Printf("Adding font:%s \n", asset.Id)
 
-	return asset.Save()
+	return asset.save()
 
 }
 
-func (a *FontAsset) Add(load bool) error {
-
-	if a.Size < 1 {
-		return fmt.Errorf("Error: font size must be larger than %d", a.Size)
-	}
-
-	a.loaded = false
-
-	if load {
-		err := a.Load()
-		if err != nil {
-			return err
-		}
-	}
-
-	fmt.Printf("Adding font:%s \n", a.Id)
-
-	return a.Save()
-
-}
-
-func (a *FontAsset) Save() error {
+func (a *FontAsset) save() error {
 
 	gameAssets.fontAssets[a.Id] = a
 
@@ -98,7 +76,7 @@ func (a *FontAsset) Load() error {
 		a.loaded = true
 	}
 
-	return a.Save()
+	return a.save()
 }
 
 func (a *FontAsset) Unload() error {
@@ -108,7 +86,7 @@ func (a *FontAsset) Unload() error {
 			fmt.Printf("Unloading font asset:%s\n", a.Id)
 			a.font.Close()
 			a.loaded = false
-			err := a.Save()
+			err := a.save()
 			if err != nil {
 				return err
 			}
@@ -163,11 +141,11 @@ func (a *assets) AddImageAsset(asset ImageAsset, load bool) error {
 
 	}
 
-	return asset.Save()
+	return asset.save()
 
 }
 
-func (a *ImageAsset) Save() error {
+func (a *ImageAsset) save() error {
 
 	gameAssets.imageAssets[a.Id] = a
 
@@ -196,7 +174,7 @@ func (a *ImageAsset) Load() error {
 	a.texture = texture
 	a.loaded = true
 
-	return a.Save()
+	return a.save()
 }
 
 func (a *ImageAsset) Unload() error {
@@ -207,7 +185,7 @@ func (a *ImageAsset) Unload() error {
 			a.image.Free()
 			a.texture.Destroy()
 			a.loaded = false
-			err := a.Save()
+			err := a.save()
 			if err != nil {
 				return err
 			}

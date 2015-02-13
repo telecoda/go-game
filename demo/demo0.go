@@ -9,16 +9,19 @@ import (
 
 const (
 	// fonts
-	DEMO0_FONT_8  = "droidsans8"
-	DEMO0_FONT_16 = "droidsans16"
-	DEMO0_FONT_48 = "droidsans48"
+	DEMO0_FONT_8   = "droidsans8"
+	DEMO0_FONT_48  = "droidsans48"
+	DEMO0_FONT_128 = "droidsans128"
 )
 
 var demo0fonts = []gogame.FontAsset{
 	{BaseAsset: gogame.BaseAsset{Id: DEMO0_FONT_8, FilePath: "./demo_assets/fonts/droid-sans/DroidSans.ttf"}, Size: 8},
-	{BaseAsset: gogame.BaseAsset{Id: DEMO0_FONT_16, FilePath: "./demo_assets/fonts/droid-sans/DroidSans.ttf"}, Size: 16},
 	{BaseAsset: gogame.BaseAsset{Id: DEMO0_FONT_48, FilePath: "./demo_assets/fonts/droid-sans/DroidSans.ttf"}, Size: 48},
+	{BaseAsset: gogame.BaseAsset{Id: DEMO0_FONT_128, FilePath: "./demo_assets/fonts/droid-sans/DroidSans.ttf"}, Size: 128},
 }
+
+var titleString = "go-game"
+var byString = "by: @telecoda"
 
 // init assets for demo 0
 func initDemo0Assets() error {
@@ -55,23 +58,14 @@ func unloadDemo0Assets() error {
 func demo0RenderCallback() {
 	renderController.ClearScreen(demoScreen.Color)
 
-	textX := int32(gameWidth / 2)
-	textY := int32(gameHeight / 2)
+	cx := int32(demoWidth / 2)
+	cy := int32(demoHeight / 2)
 
-	// valign
-	renderController.RenderText(DEMO0_FONT_16, "Horizontal alignment: LEFT", sdl.Point{X: textX, Y: 100}, black, gogame.TOP, gogame.LEFT)
-	renderController.RenderText(DEMO0_FONT_16, "Horizontal alignment: CENTER", sdl.Point{X: textX, Y: 120}, black, gogame.TOP, gogame.CENTER)
-	renderController.RenderText(DEMO0_FONT_16, "Horizontal alignment: ABS_CENTER", sdl.Point{X: textX, Y: 140}, black, gogame.TOP, gogame.ABS_CENTER)
-	renderController.RenderText(DEMO0_FONT_16, "Horizontal alignment: RIGHT", sdl.Point{X: textX, Y: 160}, black, gogame.TOP, gogame.RIGHT)
-
-	// halign
-	renderController.RenderText(DEMO0_FONT_16, "Vertical alignment: TOP", sdl.Point{X: 0, Y: textY}, black, gogame.TOP, gogame.LEFT)
-	renderController.RenderText(DEMO0_FONT_16, "Vertical alignment: MIDDLE", sdl.Point{X: textX / 2, Y: textY}, black, gogame.MIDDLE, gogame.LEFT)
-	renderController.RenderText(DEMO0_FONT_16, "Vertical alignment: ABS_MIDDLE", sdl.Point{X: textX, Y: textY}, black, gogame.ABS_MIDDLE, gogame.LEFT)
-	renderController.RenderText(DEMO0_FONT_16, "Vertical alignment: BOTTOM", sdl.Point{X: textX/2 + textX, Y: textY}, black, gogame.BOTTOM, gogame.LEFT)
-
-	//renderController.RenderText(DEMO0_FONT_16, "Test text", sdl.Point{X: 20, Y: 60}, black, gogame.TOP, gogame.LEFT)
-	//renderController.RenderText(DEMO0_FONT_16, "Test text", sdl.Point{X: 20, Y: 60}, black, gogame.TOP, gogame.LEFT)
-	//renderController.RenderText(DEMO0_FONT_48, "Test text", sdl.Point{X: 20, Y: 80}, red, gogame.MIDDLE, gogame.CENTER)
+	// shadows
+	renderController.RenderText(DEMO0_FONT_128, titleString, sdl.Point{X: int32(cx + 5), Y: int32(cy + 5)}, darkGrey, gogame.MIDDLE, gogame.CENTER)
+	renderController.RenderText(DEMO0_FONT_48, byString, sdl.Point{X: int32(cx + 50), Y: int32(cy + 100)}, darkGrey, gogame.MIDDLE, gogame.LEFT)
+	// titles
+	renderController.RenderText(DEMO0_FONT_128, titleString, sdl.Point{X: 0, Y: 0}, black, gogame.ABS_MIDDLE, gogame.ABS_CENTER)
+	renderController.RenderText(DEMO0_FONT_48, byString, sdl.Point{X: int32(cx + 48), Y: int32(cy + 98)}, black, gogame.MIDDLE, gogame.LEFT)
 
 }
