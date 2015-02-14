@@ -122,7 +122,7 @@ func EventLoop() {
 		onRender()
 		t1 = t2
 
-		sdl.Delay(16)
+		//sdl.Delay(16)
 		present()
 
 		if rendCont.quit {

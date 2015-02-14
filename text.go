@@ -24,7 +24,7 @@ const (
 	RIGHT      HAlign = "right"
 )
 
-func (r renderController) RenderText(assetId string, text string, pos sdl.Point, textColor sdl.Color, vAlign VAlign, hAlign HAlign) error {
+func (r renderController) RenderText(assetId string, text string, pos sdl.Point, angle float64, textColor sdl.Color, vAlign VAlign, hAlign HAlign) error {
 
 	font, err := getFont(assetId)
 	if err != nil {
@@ -32,7 +32,9 @@ func (r renderController) RenderText(assetId string, text string, pos sdl.Point,
 	}
 
 	//font.SetOutline(2)
+	//textSurface := font.RenderText_Blended(text, textColor)
 	textSurface := font.RenderText_Blended(text, textColor)
+
 	//backColor := sdl.Color{R: 255, G: 0, B: 0, A: 255}
 	//textSurface := font.RenderText_Shaded(text, textColor, backColor)
 
@@ -73,7 +75,10 @@ func (r renderController) RenderText(assetId string, text string, pos sdl.Point,
 
 	src := sdl.Rect{0, 0, textSurface.W, textSurface.H}
 	dst := sdl.Rect{textX, textY, textSurface.W, textSurface.H}
-	r.Renderer.Copy(texture, &src, &dst)
+	//r.Renderer.Copy(texture, &src, &dst)
+	//angle := 0.0
+	center := sdl.Point{(textX-pos.X)/2 + textWidth/2, (textY - pos.Y) + textHeight/2}
+	r.Renderer.CopyEx(texture, &src, &dst, angle, &center, sdl.FLIP_NONE)
 
 	return nil
 }

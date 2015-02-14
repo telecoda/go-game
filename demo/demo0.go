@@ -55,10 +55,10 @@ func demo0RenderCallback() {
 	renderController.ClearScreen(demoScreen.Color)
 
 	// shadows
-	renderController.RenderText(SHARED_FONT_128, titleString, sdl.Point{X: int32(cx + 5), Y: int32(cy + 5)}, darkGrey, gogame.MIDDLE, gogame.CENTER)
-	renderController.RenderText(SHARED_FONT_48, byString, sdl.Point{X: int32(cx + 50), Y: int32(cy + 100)}, darkGrey, gogame.MIDDLE, gogame.LEFT)
+	renderController.RenderText(SHARED_FONT_128, titleString, sdl.Point{X: int32(cx + 5), Y: int32(cy + 5)}, 0.0, darkGrey, gogame.MIDDLE, gogame.CENTER)
+	renderController.RenderText(SHARED_FONT_48, byString, sdl.Point{X: int32(cx + 50), Y: int32(cy + 100)}, 0.0, darkGrey, gogame.MIDDLE, gogame.LEFT)
 	// titles
-	renderController.RenderText(SHARED_FONT_128, titleString, sdl.Point{X: 0, Y: 0}, black, gogame.ABS_MIDDLE, gogame.ABS_CENTER)
-	renderController.RenderText(SHARED_FONT_48, byString, sdl.Point{X: int32(cx + 48), Y: int32(cy + 98)}, black, gogame.MIDDLE, gogame.LEFT)
+	renderController.RenderText(SHARED_FONT_128, titleString, sdl.Point{X: 0, Y: 0}, 0.0, black, gogame.ABS_MIDDLE, gogame.ABS_CENTER)
+	renderController.RenderText(SHARED_FONT_48, byString, sdl.Point{X: int32(cx + 48), Y: int32(cy + 98)}, 0.0, black, gogame.MIDDLE, gogame.LEFT)
 
 }
