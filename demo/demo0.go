@@ -14,11 +14,7 @@ const (
 	DEMO0_FONT_128 = "droidsans128"
 )
 
-var demo0fonts = []gogame.FontAsset{
-	{BaseAsset: gogame.BaseAsset{Id: DEMO0_FONT_8, FilePath: "./demo_assets/fonts/droid-sans/DroidSans.ttf"}, Size: 8},
-	{BaseAsset: gogame.BaseAsset{Id: DEMO0_FONT_48, FilePath: "./demo_assets/fonts/droid-sans/DroidSans.ttf"}, Size: 48},
-	{BaseAsset: gogame.BaseAsset{Id: DEMO0_FONT_128, FilePath: "./demo_assets/fonts/droid-sans/DroidSans.ttf"}, Size: 128},
-}
+var demo0fonts = []gogame.FontAsset{}
 
 var titleString = "go-game"
 var byString = "by: @telecoda"
@@ -58,14 +54,11 @@ func unloadDemo0Assets() error {
 func demo0RenderCallback() {
 	renderController.ClearScreen(demoScreen.Color)
 
-	cx := int32(demoWidth / 2)
-	cy := int32(demoHeight / 2)
-
 	// shadows
-	renderController.RenderText(DEMO0_FONT_128, titleString, sdl.Point{X: int32(cx + 5), Y: int32(cy + 5)}, darkGrey, gogame.MIDDLE, gogame.CENTER)
-	renderController.RenderText(DEMO0_FONT_48, byString, sdl.Point{X: int32(cx + 50), Y: int32(cy + 100)}, darkGrey, gogame.MIDDLE, gogame.LEFT)
+	renderController.RenderText(SHARED_FONT_128, titleString, sdl.Point{X: int32(cx + 5), Y: int32(cy + 5)}, darkGrey, gogame.MIDDLE, gogame.CENTER)
+	renderController.RenderText(SHARED_FONT_48, byString, sdl.Point{X: int32(cx + 50), Y: int32(cy + 100)}, darkGrey, gogame.MIDDLE, gogame.LEFT)
 	// titles
-	renderController.RenderText(DEMO0_FONT_128, titleString, sdl.Point{X: 0, Y: 0}, black, gogame.ABS_MIDDLE, gogame.ABS_CENTER)
-	renderController.RenderText(DEMO0_FONT_48, byString, sdl.Point{X: int32(cx + 48), Y: int32(cy + 98)}, black, gogame.MIDDLE, gogame.LEFT)
+	renderController.RenderText(SHARED_FONT_128, titleString, sdl.Point{X: 0, Y: 0}, black, gogame.ABS_MIDDLE, gogame.ABS_CENTER)
+	renderController.RenderText(SHARED_FONT_48, byString, sdl.Point{X: int32(cx + 48), Y: int32(cy + 98)}, black, gogame.MIDDLE, gogame.LEFT)
 
 }
