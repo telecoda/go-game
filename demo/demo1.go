@@ -16,8 +16,6 @@ const (
 
 var demo1fonts = []gogame.FontAsset{}
 
-var demo1Angle float64 = 0.0
-
 // init assets for demo 1
 func initDemo1Assets() error {
 
@@ -55,21 +53,19 @@ func demo1RenderCallback() {
 
 	renderTitle()
 
-	demo1Angle++
-
 	textX := int32(demoWidth / 2)
 	textY := int32(demoHeight / 2)
 
 	// valign
-	renderController.RenderText(SHARED_FONT_16, "Horizontal alignment: LEFT", sdl.Point{X: textX, Y: 100}, demo1Angle, black, gogame.TOP, gogame.LEFT)
-	renderController.RenderText(SHARED_FONT_16, "Horizontal alignment: CENTER", sdl.Point{X: textX, Y: 120}, demo1Angle, black, gogame.TOP, gogame.CENTER)
-	renderController.RenderText(SHARED_FONT_16, "Horizontal alignment: ABS_CENTER", sdl.Point{X: textX, Y: 140}, demo1Angle, black, gogame.TOP, gogame.ABS_CENTER)
-	renderController.RenderText(SHARED_FONT_16, "Horizontal alignment: RIGHT", sdl.Point{X: textX, Y: 160}, demo1Angle, black, gogame.TOP, gogame.RIGHT)
+	renderController.RenderText(SHARED_FONT_24, "Horizontal alignment: LEFT", sdl.Point{X: textX, Y: 150}, 0.0, black, gogame.TOP, gogame.LEFT)
+	renderController.RenderText(SHARED_FONT_24, "Horizontal alignment: CENTER", sdl.Point{X: textX, Y: 180}, 0.0, black, gogame.TOP, gogame.CENTER)
+	renderController.RenderText(SHARED_FONT_24, "Horizontal alignment: ABS_CENTER", sdl.Point{X: textX, Y: 210}, 0.0, black, gogame.TOP, gogame.ABS_CENTER)
+	renderController.RenderText(SHARED_FONT_24, "Horizontal alignment: RIGHT", sdl.Point{X: textX, Y: 240}, 0.0, black, gogame.TOP, gogame.RIGHT)
 
 	// halign
-	renderController.RenderText(SHARED_FONT_16, "Vertical alignment: TOP", sdl.Point{X: 0, Y: textY}, demo1Angle, black, gogame.TOP, gogame.LEFT)
-	renderController.RenderText(SHARED_FONT_16, "Vertical alignment: MIDDLE", sdl.Point{X: textX / 2, Y: textY}, demo1Angle, black, gogame.MIDDLE, gogame.LEFT)
-	renderController.RenderText(SHARED_FONT_16, "Vertical alignment: ABS_MIDDLE", sdl.Point{X: textX, Y: textY}, demo1Angle, black, gogame.ABS_MIDDLE, gogame.LEFT)
-	renderController.RenderText(SHARED_FONT_16, "Vertical alignment: BOTTOM", sdl.Point{X: textX/2 + textX, Y: textY}, demo1Angle, black, gogame.BOTTOM, gogame.LEFT)
+	renderController.RenderText(SHARED_FONT_16, "Vertical alignment: TOP", sdl.Point{X: 0, Y: textY}, 0.0, black, gogame.TOP, gogame.LEFT)
+	renderController.RenderText(SHARED_FONT_16, "Vertical alignment: MIDDLE", sdl.Point{X: textX / 2, Y: textY}, 0.0, black, gogame.MIDDLE, gogame.LEFT)
+	renderController.RenderText(SHARED_FONT_16, "Vertical alignment: ABS_MIDDLE", sdl.Point{X: textX, Y: textY}, 0.0, black, gogame.ABS_MIDDLE, gogame.LEFT)
+	renderController.RenderText(SHARED_FONT_16, "Vertical alignment: BOTTOM", sdl.Point{X: textX/2 + textX, Y: textY}, 0.0, black, gogame.BOTTOM, gogame.LEFT)
 
 }
