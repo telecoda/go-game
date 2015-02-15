@@ -13,7 +13,6 @@ type GameEngine interface {
 }
 
 type Asset interface {
-	Add(load bool) error
 	save() error
 	Load() error
 	Unload() error
@@ -43,7 +42,7 @@ type AssetManager interface {
 }
 
 type FontRenderer interface {
-	RenderText(assetId string, text string, pos sdl.Point, textColor sdl.Color) error
+	RenderText(assetId string, text string, pos sdl.Point, angle float64, textColor sdl.Color, vAlign VAlign, hAlign HAlign) error
 }
 
 type SpriteRenderer interface {
