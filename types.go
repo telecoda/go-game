@@ -70,6 +70,7 @@ type RenderController interface {
 	GridRenderer
 	LayerRenderer
 	TextureRenderer
+	GetRenderer() *sdl.Renderer
 	SetCallback(callback RenderFunction)
 }
 

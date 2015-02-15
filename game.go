@@ -98,6 +98,11 @@ func (r *renderController) SetCallback(callback RenderFunction) {
 	r.renderCallback = callback
 }
 
+// allow low level access to SDL renderer
+func (r *renderController) GetRenderer() *sdl.Renderer {
+	return r.Renderer
+}
+
 func (e *eventHandler) SetCallback(callback EventReceiverFunction) {
 	e.eventCallback = callback
 }
@@ -122,7 +127,7 @@ func EventLoop() {
 		onRender()
 		t1 = t2
 
-		//sdl.Delay(16)
+		sdl.Delay(1000 / 60)
 		present()
 
 		if rendCont.quit {
