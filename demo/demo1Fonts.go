@@ -8,15 +8,6 @@ import (
 	"github.com/veandco/go-sdl2/sdl"
 )
 
-const (
-	// fonts
-	DEMO1_FONT_8  = "droidsans8"
-	DEMO1_FONT_16 = "droidsans16"
-	DEMO1_FONT_48 = "droidsans48"
-)
-
-var horizLeftTyped = ""
-var horizLeftText = "Horizontal alignment: LEFT"
 var typingSpeed = time.Duration(100 * time.Millisecond)
 var currentLabel int
 
@@ -29,14 +20,14 @@ type textTyping struct {
 var textLabels []textTyping
 
 var demo1QuitChan = make(chan bool, 0)
-var demo1fonts = []gogame.FontAsset{}
+var demo1Fonts = []gogame.FontAsset{}
 
 // init assets for demo 1
 func initDemo1Assets() error {
 
 	fmt.Printf("Loading Demo1 assets\n")
 
-	for _, fontAsset := range demo1fonts {
+	for _, fontAsset := range demo1Fonts {
 		err := assetHandler.AddFontAsset(fontAsset, true)
 		if err != nil {
 			return fmt.Errorf("Error occurred whilst adding a font asset:%s", err)
@@ -53,8 +44,8 @@ func unloadDemo1Assets() error {
 
 	fmt.Printf("Unloading Demo1 assets\n")
 
-	for _, fontRes := range demo1fonts {
-		err := fontRes.Unload()
+	for _, fontAsset := range demo1Fonts {
+		err := fontAsset.Unload()
 		if err != nil {
 			return fmt.Errorf("Error occurred whilst unloading a font asset:%s", err)
 		}
@@ -151,7 +142,6 @@ func demo1RenderCallback() {
 	renderTitle()
 
 	textX := int32(demoWidth / 2)
-	//textY := int32(demoHeight / 2)
 
 	// valign
 	fontPos := sdl.Point{textX, 150}
