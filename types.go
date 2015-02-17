@@ -113,6 +113,7 @@ type imageAssetMap map[string]*ImageAsset
 type spriteMap map[string]*Sprite
 
 type RenderFunction func()
+
 type EventReceiverFunction func(e interface{})
 
 type renderController struct {

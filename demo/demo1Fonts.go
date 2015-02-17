@@ -6,9 +6,11 @@ import (
 
 	"github.com/telecoda/go-game"
 	"github.com/veandco/go-sdl2/sdl"
+	mix "github.com/veandco/go-sdl2/sdl_mixer"
 )
 
 var typingSpeed = time.Duration(100 * time.Millisecond)
+var rotationSpeed = time.Duration(20 * time.Millisecond)
 var currentLabel int
 
 type textTyping struct {
@@ -17,10 +19,15 @@ type textTyping struct {
 	hasCursor  bool
 }
 
+var typingAnimSched *gogame.FunctionScheduler
+var rotatingTextAnimSched *gogame.FunctionScheduler
+
 var textLabels []textTyping
 
-var demo1QuitChan = make(chan bool, 0)
 var demo1Fonts = []gogame.FontAsset{}
+
+var keySound *mix.Chunk
+var bellSound *mix.Chunk
 
 // init assets for demo 1
 func initDemo1Assets() error {
@@ -35,7 +42,49 @@ func initDemo1Assets() error {
 
 	}
 
+	err := initAudio()
+	if err != nil {
+		return err
+	}
+
 	startDemo1Animation()
+
+	return nil
+}
+
+func initAudio() error {
+
+	if sdl.Init(sdl.INIT_AUDIO) < 0 {
+		return fmt.Errorf("Failed to init SDL audio\n")
+	}
+
+	if !mix.OpenAudio(mix.DEFAULT_FREQUENCY, mix.DEFAULT_FORMAT, mix.DEFAULT_CHANNELS, mix.DEFAULT_CHUNKSIZE) {
+		return fmt.Errorf("Failed to open audio\n")
+	}
+
+	keySound = mix.LoadWAV("./demo_assets/audio/typewriter-key.wav")
+	if keySound == nil {
+		return fmt.Errorf("Failed to load wav\n")
+	}
+
+	bellSound = mix.LoadWAV("./demo_assets/audio/typewriter-bell.wav")
+	if bellSound == nil {
+		return fmt.Errorf("Failed to load wav\n")
+	}
+
+	return nil
+}
+
+func playKey() error {
+
+	keySound.PlayChannel(-1, 0)
+
+	return nil
+}
+
+func playBell() error {
+
+	bellSound.PlayChannel(-1, 0)
 
 	return nil
 }
@@ -52,13 +101,15 @@ func unloadDemo1Assets() error {
 
 	}
 
-	stopDemo1Animation()
+	typingAnimSched.Destroy()
+	rotatingTextAnimSched.Destroy()
 	return nil
 }
 
 func startDemo1Animation() {
 
 	// init animation vars
+	angle = 0.0
 	textLabels = make([]textTyping, 8)
 
 	textLabels[0] = textTyping{actualText: "Horizontal alignment: LEFT", typedText: ""}
@@ -71,44 +122,44 @@ func startDemo1Animation() {
 	textLabels[7] = textTyping{actualText: "Vertical alignment: BOTTOM", typedText: ""}
 	currentLabel = 0
 
-	go demo1AnimationLoop()
+	typingAnimSched = gogame.NewFunctionScheduler(typingSpeed, -1, demo1AnimateTyping)
+	rotatingTextAnimSched = gogame.NewFunctionScheduler(rotationSpeed, 360, demo1AnimateRotation)
 
-}
+	typingAnimSched.Start()
 
-func demo1AnimationLoop() {
-
-	ticker := time.NewTicker(typingSpeed)
-
-	for {
-
-		// wait for ani tick
-		select {
-		case <-demo1QuitChan:
-			ticker.Stop()
-			return
-		case <-ticker.C:
-			demo1AnimationTick()
-		}
-	}
-
-}
-
-func stopDemo1Animation() {
-
-	demo1QuitChan <- true
 }
 
 // this code is called for each tick of the timer
-func demo1AnimationTick() {
+func demo1AnimateTyping() {
 
 	// update current label
-
 	hasFinished := textLabels[currentLabel].update()
 	if hasFinished {
 		// move onto next label
 		if currentLabel != len(textLabels)-1 {
 			currentLabel++
+			playBell()
+
+		} else {
+			// move onto rotation
+			typingAnimSched.Destroy()
+
+			rotatingTextAnimSched.Start()
 		}
+
+	} else {
+
+		playKey()
+
+	}
+
+}
+
+func demo1AnimateRotation() {
+
+	angle = angle + 10.0
+	if angle > 360 {
+		angle = angle - 360.0
 	}
 
 }
@@ -145,36 +196,36 @@ func demo1RenderCallback() {
 
 	// valign
 	fontPos := sdl.Point{textX, 150}
-	renderController.RenderText(SHARED_FONT_24, textLabels[0].String(), fontPos, 0.0, black, gogame.TOP, gogame.LEFT)
+	renderController.RenderText(SHARED_FONT_24, textLabels[0].String(), fontPos, angle, black, gogame.TOP, gogame.LEFT)
 	renderFontPos(fontPos)
 
 	fontPos = sdl.Point{textX, 200}
-	renderController.RenderText(SHARED_FONT_24, textLabels[1].String(), fontPos, 0.0, black, gogame.TOP, gogame.CENTER)
+	renderController.RenderText(SHARED_FONT_24, textLabels[1].String(), fontPos, angle, black, gogame.TOP, gogame.CENTER)
 	renderFontPos(fontPos)
 
 	fontPos = sdl.Point{textX, 250}
-	renderController.RenderText(SHARED_FONT_24, textLabels[2].String(), fontPos, 0.0, black, gogame.TOP, gogame.ABS_CENTER)
+	renderController.RenderText(SHARED_FONT_24, textLabels[2].String(), fontPos, angle, black, gogame.TOP, gogame.ABS_CENTER)
 	renderFontPos(fontPos)
 
 	fontPos = sdl.Point{textX, 300}
-	renderController.RenderText(SHARED_FONT_24, textLabels[3].String(), fontPos, 0.0, black, gogame.TOP, gogame.RIGHT)
+	renderController.RenderText(SHARED_FONT_24, textLabels[3].String(), fontPos, angle, black, gogame.TOP, gogame.RIGHT)
 	renderFontPos(fontPos)
 
 	// halign
 	fontPos = sdl.Point{textX, 350}
-	renderController.RenderText(SHARED_FONT_24, textLabels[4].String(), fontPos, 0.0, black, gogame.TOP, gogame.LEFT)
+	renderController.RenderText(SHARED_FONT_24, textLabels[4].String(), fontPos, angle, black, gogame.TOP, gogame.LEFT)
 	renderFontPos(fontPos)
 
 	fontPos = sdl.Point{textX, 400}
-	renderController.RenderText(SHARED_FONT_24, textLabels[5].String(), fontPos, 0.0, black, gogame.ABS_MIDDLE, gogame.LEFT)
+	renderController.RenderText(SHARED_FONT_24, textLabels[5].String(), fontPos, angle, black, gogame.ABS_MIDDLE, gogame.LEFT)
 	renderFontPos(fontPos)
 
 	fontPos = sdl.Point{textX, 450}
-	renderController.RenderText(SHARED_FONT_24, textLabels[6].String(), fontPos, 0.0, black, gogame.MIDDLE, gogame.LEFT)
+	renderController.RenderText(SHARED_FONT_24, textLabels[6].String(), fontPos, angle, black, gogame.MIDDLE, gogame.LEFT)
 	renderFontPos(fontPos)
 
 	fontPos = sdl.Point{textX, 550}
-	renderController.RenderText(SHARED_FONT_24, textLabels[7].String(), fontPos, 0.0, black, gogame.BOTTOM, gogame.LEFT)
+	renderController.RenderText(SHARED_FONT_24, textLabels[7].String(), fontPos, angle, black, gogame.BOTTOM, gogame.LEFT)
 	renderFontPos(fontPos)
 
 }

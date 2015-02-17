@@ -46,11 +46,12 @@ func (r renderController) RenderText(assetId string, text string, pos sdl.Point,
 		return fmt.Errorf("Error rendering text:%s\n", err)
 	}
 
-	var textY, textX int32
+	var textY, textX, centreX, centreY int32
 
 	textWidth := textSurface.W
 	textHeight := textSurface.H
 
+	// calc Y pos
 	switch vAlign {
 	case TOP:
 		textY = pos.Y
@@ -62,6 +63,7 @@ func (r renderController) RenderText(assetId string, text string, pos sdl.Point,
 		textY = pos.Y - textHeight
 	}
 
+	// calc X pos
 	switch hAlign {
 	case LEFT:
 		textX = pos.X
@@ -73,11 +75,36 @@ func (r renderController) RenderText(assetId string, text string, pos sdl.Point,
 		textX = pos.X - textWidth
 	}
 
+	// calc centre Y
+	switch vAlign {
+	case TOP:
+		centreY = 0
+	case MIDDLE:
+		centreY = textHeight / 2
+	case ABS_MIDDLE:
+		centreY = textHeight / 2
+	case BOTTOM:
+		centreY = textHeight
+	}
+
+	// calc centre X
+	switch hAlign {
+	case LEFT:
+		centreX = 0
+	case CENTER:
+		centreX = textWidth / 2
+	case ABS_CENTER:
+		centreX = textWidth / 2
+	case RIGHT:
+		centreX = textWidth
+	}
+
+	center := sdl.Point{centreX, centreY}
+
 	src := sdl.Rect{0, 0, textSurface.W, textSurface.H}
 	dst := sdl.Rect{textX, textY, textSurface.W, textSurface.H}
 	//r.Renderer.Copy(texture, &src, &dst)
 	//angle := 0.0
-	center := sdl.Point{(textX-pos.X)/2 + textWidth/2, (textY - pos.Y) + textHeight/2}
 	r.Renderer.CopyEx(texture, &src, &dst, angle, &center, sdl.FLIP_NONE)
 
 	return nil
