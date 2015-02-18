@@ -16,7 +16,6 @@ type FunctionScheduler struct {
 
 type Scheduler interface {
 	Start()
-	//Restart()
 	Destroy()
 	Pause()
 	Unpause()

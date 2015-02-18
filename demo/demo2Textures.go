@@ -12,23 +12,10 @@ const (
 
 	// images
 	GOPHER_RUN = "gopherrun"
-	/*JAVA_DUKE    = "javaduke"
-	FLOOR_IMAGE  = "floorimage"
-	CLOUD1_IMAGE = "cloud1image"
-	CLOUD2_IMAGE = "cloud2image"
-	CLOUD3_IMAGE = "cloud3image"
-	CLOUD4_IMAGE = "cloud4image"*/
-
 )
 
 var demo2Images = []gogame.ImageAsset{
 	{BaseAsset: gogame.BaseAsset{Id: GOPHER_RUN, FilePath: "./demo_assets/images/sprites/gopher-run.png"}},
-	//	{Id: JAVA_DUKE, FilePath: "./assets/images/sprites/java-duke.png"},
-	//	{Id: FLOOR_IMAGE, FilePath: "./assets/images/sprites/floor.png"},
-	//	{Id: CLOUD1_IMAGE, FilePath: "./assets/images/sprites/cloud1.png"},
-	//	{Id: CLOUD2_IMAGE, FilePath: "./assets/images/sprites/cloud2.png"},
-	//	{Id: CLOUD3_IMAGE, FilePath: "./assets/images/sprites/cloud3.png"},
-	//	{Id: CLOUD4_IMAGE, FilePath: "./assets/images/sprites/cloud4.png"},
 }
 
 var angle = 0.0
@@ -97,6 +84,8 @@ func unloadDemo2Assets() error {
 
 	}
 
+	rotTextAnimSched.Destroy()
+
 	return nil
 }
 
@@ -104,18 +93,6 @@ func startDemo2Animation() {
 
 	// init animation vars
 	angle = 0.0
-	/*	textLabels = make([]textTyping, 8)
-
-		textLabels[0] = textTyping{actualText: "Horizontal alignment: LEFT", typedText: ""}
-		textLabels[1] = textTyping{actualText: "Horizontal alignment: CENTER", typedText: ""}
-		textLabels[2] = textTyping{actualText: "Horizontal alignment: ABS_CENTER", typedText: ""}
-		textLabels[3] = textTyping{actualText: "Horizontal alignment: RIGHT", typedText: ""}
-		textLabels[4] = textTyping{actualText: "Vertical alignment: TOP", typedText: ""}
-		textLabels[5] = textTyping{actualText: "Vertical alignment: ABS_MIDDLE", typedText: ""}
-		textLabels[6] = textTyping{actualText: "Vertical alignment: MIDDLE", typedText: ""}
-		textLabels[7] = textTyping{actualText: "Vertical alignment: BOTTOM", typedText: ""}
-		currentLabel = 0
-	*/
 	rotTextAnimSched = gogame.NewFunctionScheduler(rotateTextureSpeed, -1, demo2AnimateRotation)
 
 	rotTextAnimSched.Start()

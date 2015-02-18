@@ -164,6 +164,8 @@ func demo1AnimateRotation() {
 		angle = angle - 360.0
 	}
 
+	fmt.Printf("demo1rotatetext\n")
+
 }
 
 func (t *textTyping) update() bool {
