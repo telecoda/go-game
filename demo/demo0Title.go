@@ -18,6 +18,7 @@ var demo0fonts = []gogame.FontAsset{}
 
 var titleString = "go-game"
 var byString = "by: @telecoda"
+var strapLine = "making the boring s*!t easy.."
 
 // init assets for demo 0
 func initDemo0Assets() error {
@@ -60,5 +61,7 @@ func demo0RenderCallback() {
 	// titles
 	renderController.RenderText(SHARED_FONT_128, titleString, sdl.Point{X: 0, Y: 0}, 0.0, black, gogame.ABS_MIDDLE, gogame.ABS_CENTER)
 	renderController.RenderText(SHARED_FONT_48, byString, sdl.Point{X: int32(cx + 48), Y: int32(cy + 98)}, 0.0, black, gogame.MIDDLE, gogame.LEFT)
+
+	renderController.RenderText(SHARED_FONT_24, strapLine, sdl.Point{X: 0, Y: 600}, 0.0, black, gogame.TOP, gogame.ABS_CENTER)
 
 }

@@ -36,17 +36,17 @@ var sizeX = int32(32)
 var sizeY = int32(32)
 var sizeVelocity = int32(5)
 var minSize = int32(5)
-var maxSize = int32(500)
+var maxSize = int32(350)
 
 // animation
 var rotTextAnimSched *gogame.FunctionScheduler
 var rotateTextureSpeed = time.Duration(20 * time.Millisecond)
 
-var textureGrid1 = sdl.Rect{50, 200, 64, 64}
-var textureGrid2 = sdl.Rect{150, 200, 64, 64}
-var textureGrid3 = sdl.Rect{250, 200, 64, 64}
-var textureGrid4 = sdl.Rect{350, 200, 64, 64}
-var textureGrid5 = sdl.Rect{450, 200, 500, 500}
+var textureGrid1 = sdl.Rect{100, 200, 64, 64}
+var textureGrid2 = sdl.Rect{200, 200, 64, 64}
+var textureGrid3 = sdl.Rect{300, 200, 64, 64}
+var textureGrid4 = sdl.Rect{400, 200, 64, 64}
+var textureGrid5 = sdl.Rect{500, 200, 350, 350}
 
 // init assets for demo 2
 func initDemo2Assets() error {
@@ -77,11 +77,11 @@ func demo2RenderCallback() {
 	renderController.RenderGridInRect(textureGrid3, 4, 4, black)
 	renderController.RenderGridInRect(textureGrid4, 4, 4, black)
 	renderController.RenderGridInRect(textureGrid5, 4, 4, black)
-	renderController.RenderTexture(GOPHER_RUN, sdl.Point{50, 200}, 32, 32)
-	renderController.RenderTexture(GOPHER_RUN, sdl.Point{150, 200}, 64, 32)
-	renderController.RenderTexture(GOPHER_RUN, sdl.Point{250, 200}, 32, 64)
-	renderController.RenderTexture(GOPHER_RUN, sdl.Point{350, 200}, 64, 64)
-	renderController.RenderRotatedTexture(GOPHER_RUN, sdl.Point{450, 200}, angle, sizeX, sizeY)
+	renderController.RenderTexture(GOPHER_RUN, sdl.Point{100, 200}, 32, 32)
+	renderController.RenderTexture(GOPHER_RUN, sdl.Point{200, 200}, 64, 32)
+	renderController.RenderTexture(GOPHER_RUN, sdl.Point{300, 200}, 32, 64)
+	renderController.RenderTexture(GOPHER_RUN, sdl.Point{400, 200}, 64, 64)
+	renderController.RenderRotatedTexture(GOPHER_RUN, sdl.Point{500, 200}, angle, sizeX, sizeY)
 
 	return
 }

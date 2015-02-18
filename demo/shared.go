@@ -54,13 +54,13 @@ func renderTitle() {
 	renderController.RenderText(SHARED_FONT_16, demoScreen.Description, sdl.Point{50, 160}, 0.0, black, gogame.TOP, gogame.LEFT)
 
 	// Code sample
-	fromLine := 180
+	fromLine := 600
 	lineSpacing := 20
 	codeX := 50
 	codeY := fromLine
 	for _, codeLine := range demoScreen.CodeSample {
 		renderController.RenderText(SHARED_FONT_16, codeLine, sdl.Point{int32(codeX), int32(codeY)}, 0.0, black, gogame.TOP, gogame.LEFT)
-		codeX += lineSpacing
+		codeY += lineSpacing
 	}
 
 	renderFPS()
