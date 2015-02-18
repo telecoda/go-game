@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/telecoda/go-game"
 	"github.com/veandco/go-sdl2/sdl"
@@ -37,6 +38,16 @@ var sizeVelocity = int32(5)
 var minSize = int32(5)
 var maxSize = int32(500)
 
+// animation
+var rotTextAnimSched *gogame.FunctionScheduler
+var rotateTextureSpeed = time.Duration(20 * time.Millisecond)
+
+var textureGrid1 = sdl.Rect{50, 200, 64, 64}
+var textureGrid2 = sdl.Rect{150, 200, 64, 64}
+var textureGrid3 = sdl.Rect{250, 200, 64, 64}
+var textureGrid4 = sdl.Rect{350, 200, 64, 64}
+var textureGrid5 = sdl.Rect{450, 200, 500, 500}
+
 // init assets for demo 2
 func initDemo2Assets() error {
 	fmt.Printf("Loading Demo2 assets\n")
@@ -49,7 +60,7 @@ func initDemo2Assets() error {
 
 	}
 
-	//startDemo2Animation()
+	startDemo2Animation()
 
 	return nil
 }
@@ -57,24 +68,15 @@ func initDemo2Assets() error {
 // render screen for demo 2
 func demo2RenderCallback() {
 
-	angle++
-	if angle > 360 {
-		angle = angle - 360
-	}
-
-	sizeX = sizeX + sizeVelocity
-	sizeY = sizeY + sizeVelocity
-
-	if sizeX > maxSize {
-		sizeVelocity = sizeVelocity * -1
-	}
-	if sizeX < minSize {
-		sizeVelocity = sizeVelocity * -1
-	}
 	renderController.ClearScreen(demoScreen.Color)
 
 	renderTitle()
 
+	renderController.RenderGridInRect(textureGrid1, 4, 4, black)
+	renderController.RenderGridInRect(textureGrid2, 4, 4, black)
+	renderController.RenderGridInRect(textureGrid3, 4, 4, black)
+	renderController.RenderGridInRect(textureGrid4, 4, 4, black)
+	renderController.RenderGridInRect(textureGrid5, 4, 4, black)
 	renderController.RenderTexture(GOPHER_RUN, sdl.Point{50, 200}, 32, 32)
 	renderController.RenderTexture(GOPHER_RUN, sdl.Point{150, 200}, 64, 32)
 	renderController.RenderTexture(GOPHER_RUN, sdl.Point{250, 200}, 32, 64)
@@ -96,4 +98,46 @@ func unloadDemo2Assets() error {
 	}
 
 	return nil
+}
+
+func startDemo2Animation() {
+
+	// init animation vars
+	angle = 0.0
+	/*	textLabels = make([]textTyping, 8)
+
+		textLabels[0] = textTyping{actualText: "Horizontal alignment: LEFT", typedText: ""}
+		textLabels[1] = textTyping{actualText: "Horizontal alignment: CENTER", typedText: ""}
+		textLabels[2] = textTyping{actualText: "Horizontal alignment: ABS_CENTER", typedText: ""}
+		textLabels[3] = textTyping{actualText: "Horizontal alignment: RIGHT", typedText: ""}
+		textLabels[4] = textTyping{actualText: "Vertical alignment: TOP", typedText: ""}
+		textLabels[5] = textTyping{actualText: "Vertical alignment: ABS_MIDDLE", typedText: ""}
+		textLabels[6] = textTyping{actualText: "Vertical alignment: MIDDLE", typedText: ""}
+		textLabels[7] = textTyping{actualText: "Vertical alignment: BOTTOM", typedText: ""}
+		currentLabel = 0
+	*/
+	rotTextAnimSched = gogame.NewFunctionScheduler(rotateTextureSpeed, -1, demo2AnimateRotation)
+
+	rotTextAnimSched.Start()
+
+}
+
+func demo2AnimateRotation() {
+
+	// rotate texture
+	angle++
+	if angle > 360 {
+		angle = angle - 360
+	}
+
+	// increase & decrease texture size
+	sizeX = sizeX + sizeVelocity
+	sizeY = sizeY + sizeVelocity
+
+	if sizeX > maxSize {
+		sizeVelocity = sizeVelocity * -1
+	}
+	if sizeX < minSize {
+		sizeVelocity = sizeVelocity * -1
+	}
 }

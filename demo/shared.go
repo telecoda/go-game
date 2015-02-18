@@ -43,11 +43,25 @@ func initSharedAssets() error {
 }
 
 func renderTitle() {
-	titleString := demoScreen.Title
+
+	// Title
 	// shadows
-	renderController.RenderText(SHARED_FONT_128, titleString, sdl.Point{X: 25, Y: 25}, 0.0, darkGrey, gogame.TOP, gogame.LEFT)
+	renderController.RenderText(SHARED_FONT_128, demoScreen.Title, sdl.Point{X: 25, Y: 25}, 0.0, darkGrey, gogame.TOP, gogame.LEFT)
 	// titles
-	renderController.RenderText(SHARED_FONT_128, titleString, sdl.Point{X: 20, Y: 20}, 0.0, black, gogame.TOP, gogame.LEFT)
+	renderController.RenderText(SHARED_FONT_128, demoScreen.Title, sdl.Point{X: 20, Y: 20}, 0.0, black, gogame.TOP, gogame.LEFT)
+
+	// Description
+	renderController.RenderText(SHARED_FONT_16, demoScreen.Description, sdl.Point{50, 160}, 0.0, black, gogame.TOP, gogame.LEFT)
+
+	// Code sample
+	fromLine := 180
+	lineSpacing := 20
+	codeX := 50
+	codeY := fromLine
+	for _, codeLine := range demoScreen.CodeSample {
+		renderController.RenderText(SHARED_FONT_16, codeLine, sdl.Point{int32(codeX), int32(codeY)}, 0.0, black, gogame.TOP, gogame.LEFT)
+		codeX += lineSpacing
+	}
 
 	renderFPS()
 

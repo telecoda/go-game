@@ -120,8 +120,8 @@ func initDemoScreens() {
 	demoScreens = make(map[int]*DemoScreen)
 
 	demoScreens[0] = &DemoScreen{Id: 0, Title: "Title screen", Color: lightGrey, InitAssets: initDemo0Assets, UnloadAssets: unloadDemo0Assets, RenderCallback: demo0RenderCallback}
-	demoScreens[1] = &DemoScreen{Id: 1, Title: "Fonts:", Color: white, InitAssets: initDemo1Assets, UnloadAssets: unloadDemo1Assets, RenderCallback: demo1RenderCallback}
-	demoScreens[2] = &DemoScreen{Id: 2, Title: "Textures:", Color: lightGrey, InitAssets: initDemo2Assets, UnloadAssets: unloadDemo2Assets, RenderCallback: demo2RenderCallback}
+	demoScreens[1] = &DemoScreen{Id: 1, Title: "Fonts:", Description: "Text can be rendered from fonts loaded into the AssetManager", Color: white, InitAssets: initDemo1Assets, UnloadAssets: unloadDemo1Assets, RenderCallback: demo1RenderCallback}
+	demoScreens[2] = &DemoScreen{Id: 2, Title: "Textures:", Description: "Textures can be rendered from images loaded into the AssetManager", Color: lightGrey, InitAssets: initDemo2Assets, UnloadAssets: unloadDemo2Assets, RenderCallback: demo2RenderCallback}
 	demoScreens[3] = &DemoScreen{Id: 3, Title: "Sprites:", Color: white, InitAssets: initDemo3Assets, UnloadAssets: unloadDemo3Assets, RenderCallback: demo3RenderCallback}
 	demoScreens[4] = &DemoScreen{Id: 4, Title: "Sprite Layers:", Color: lightGrey, InitAssets: initDemo4Assets, UnloadAssets: unloadDemo4Assets, RenderCallback: demo4RenderCallback}
 	demoScreens[5] = &DemoScreen{Id: 5, Title: "Audio:", Color: white, InitAssets: initDemo5Assets, UnloadAssets: unloadDemo5Assets, RenderCallback: demo5RenderCallback}

@@ -19,15 +19,17 @@ type textTyping struct {
 	hasCursor  bool
 }
 
-var typingAnimSched *gogame.FunctionScheduler
-var rotatingTextAnimSched *gogame.FunctionScheduler
-
 var textLabels []textTyping
 
 var demo1Fonts = []gogame.FontAsset{}
 
+// audio
 var keySound *mix.Chunk
 var bellSound *mix.Chunk
+
+// animation
+var typingAnimSched *gogame.FunctionScheduler
+var rotatingTextAnimSched *gogame.FunctionScheduler
 
 // init assets for demo 1
 func initDemo1Assets() error {
@@ -116,8 +118,8 @@ func startDemo1Animation() {
 	textLabels[1] = textTyping{actualText: "Horizontal alignment: CENTER", typedText: ""}
 	textLabels[2] = textTyping{actualText: "Horizontal alignment: ABS_CENTER", typedText: ""}
 	textLabels[3] = textTyping{actualText: "Horizontal alignment: RIGHT", typedText: ""}
-	textLabels[4] = textTyping{actualText: "Vertical alignment: TOP", typedText: ""}
-	textLabels[5] = textTyping{actualText: "Vertical alignment: ABS_MIDDLE", typedText: ""}
+	textLabels[4] = textTyping{actualText: "Vertical alignment: ABS_MIDDLE", typedText: ""}
+	textLabels[5] = textTyping{actualText: "Vertical alignment: TOP", typedText: ""}
 	textLabels[6] = textTyping{actualText: "Vertical alignment: MIDDLE", typedText: ""}
 	textLabels[7] = textTyping{actualText: "Vertical alignment: BOTTOM", typedText: ""}
 	currentLabel = 0
@@ -195,32 +197,32 @@ func demo1RenderCallback() {
 	textX := int32(demoWidth / 2)
 
 	// valign
-	fontPos := sdl.Point{textX, 150}
+	fontPos := sdl.Point{textX, 200}
 	renderController.RenderText(SHARED_FONT_24, textLabels[0].String(), fontPos, angle, black, gogame.TOP, gogame.LEFT)
 	renderFontPos(fontPos)
 
-	fontPos = sdl.Point{textX, 200}
+	fontPos = sdl.Point{textX, 250}
 	renderController.RenderText(SHARED_FONT_24, textLabels[1].String(), fontPos, angle, black, gogame.TOP, gogame.CENTER)
 	renderFontPos(fontPos)
 
-	fontPos = sdl.Point{textX, 250}
+	fontPos = sdl.Point{textX, 300}
 	renderController.RenderText(SHARED_FONT_24, textLabels[2].String(), fontPos, angle, black, gogame.TOP, gogame.ABS_CENTER)
 	renderFontPos(fontPos)
 
-	fontPos = sdl.Point{textX, 300}
+	fontPos = sdl.Point{textX, 350}
 	renderController.RenderText(SHARED_FONT_24, textLabels[3].String(), fontPos, angle, black, gogame.TOP, gogame.RIGHT)
 	renderFontPos(fontPos)
 
 	// halign
-	fontPos = sdl.Point{textX, 350}
-	renderController.RenderText(SHARED_FONT_24, textLabels[4].String(), fontPos, angle, black, gogame.TOP, gogame.LEFT)
-	renderFontPos(fontPos)
-
 	fontPos = sdl.Point{textX, 400}
-	renderController.RenderText(SHARED_FONT_24, textLabels[5].String(), fontPos, angle, black, gogame.ABS_MIDDLE, gogame.LEFT)
+	renderController.RenderText(SHARED_FONT_24, textLabels[4].String(), fontPos, angle, black, gogame.ABS_MIDDLE, gogame.LEFT)
 	renderFontPos(fontPos)
 
 	fontPos = sdl.Point{textX, 450}
+	renderController.RenderText(SHARED_FONT_24, textLabels[5].String(), fontPos, angle, black, gogame.TOP, gogame.LEFT)
+	renderFontPos(fontPos)
+
+	fontPos = sdl.Point{textX, 500}
 	renderController.RenderText(SHARED_FONT_24, textLabels[6].String(), fontPos, angle, black, gogame.MIDDLE, gogame.LEFT)
 	renderFontPos(fontPos)
 

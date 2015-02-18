@@ -56,6 +56,7 @@ type LayerRenderer interface {
 
 type GridRenderer interface {
 	RenderGrid(xSize, ySize int, color sdl.Color)
+	RenderGridInRect(rect sdl.Rect, xSize, ySize int, color sdl.Color)
 }
 
 type TextureRenderer interface {

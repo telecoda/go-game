@@ -11,6 +11,8 @@ type unloadAssetsFunction func() error
 type DemoScreen struct {
 	Id             int
 	Title          string
+	Description    string
+	CodeSample     []string
 	Color          sdl.Color
 	InitAssets     initAssetsFunction
 	UnloadAssets   unloadAssetsFunction
