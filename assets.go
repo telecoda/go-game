@@ -5,14 +5,9 @@ import (
 
 	"github.com/veandco/go-sdl2/sdl"
 	"github.com/veandco/go-sdl2/sdl_image"
-	"github.com/veandco/go-sdl2/sdl_ttf"
+	mix "github.com/veandco/go-sdl2/sdl_mixer"
+	ttf "github.com/veandco/go-sdl2/sdl_ttf"
 )
-
-func init() {
-	// initialise library
-	ttf.Init()
-
-}
 
 func (a *assets) Destroy() {
 	a.audioAssets.Destroy()
@@ -28,6 +23,90 @@ func (a *assets) Initialize() error {
 	a.spriteBank = make(spriteMap)
 
 	return nil
+}
+
+func (a *assets) AddAudioAsset(asset AudioAsset, load bool) error {
+
+	asset.loaded = false
+
+	if load {
+		err := asset.Load()
+		if err != nil {
+			return err
+		}
+	}
+
+	fmt.Printf("Adding audio asset:%s \n", asset.Id)
+
+	return asset.save()
+
+}
+
+func (a *AudioAsset) save() error {
+
+	gameAssets.audioAssets[a.Id] = a
+
+	return nil
+
+}
+
+func (a *AudioAsset) Load() error {
+
+	// already loaded
+	if a.loaded {
+		return nil
+	}
+
+	chunk := mix.LoadWAV(a.FilePath)
+	if chunk == nil {
+		return fmt.Errorf("Failed to load wav: %s\n", a.FilePath)
+	}
+
+	if chunk != nil {
+		a.chunk = chunk
+		a.loaded = true
+	}
+
+	return a.save()
+}
+
+func (a *AudioAsset) Unload() error {
+
+	if a.loaded {
+		if a.chunk != nil {
+			fmt.Printf("Unloading audio asset:%s\n", a.Id)
+			a.chunk.Free()
+			a.loaded = false
+			err := a.save()
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	return nil
+}
+
+func getAudioAsset(assetId string) (*AudioAsset, error) {
+	asset, ok := gameAssets.audioAssets[assetId]
+	if !ok {
+		return nil, fmt.Errorf("Error: unknown audio asset:%s\n ", assetId)
+	}
+	return asset, nil
+}
+
+func getAudio(assetId string) (*mix.Chunk, error) {
+
+	asset, err := getAudioAsset(assetId)
+	if err != nil {
+		return nil, err
+	}
+
+	if asset.chunk == nil {
+		return nil, fmt.Errorf("Error: audio not loaded:%s\n ", assetId)
+	}
+
+	return asset.chunk, nil
 }
 
 func (a *assets) AddFontAsset(asset FontAsset, load bool) error {

@@ -27,6 +27,17 @@ var demo1Fonts = []gogame.FontAsset{}
 var keySound *mix.Chunk
 var bellSound *mix.Chunk
 
+const (
+	// fonts
+	TYPEWRITER_KEY_SOUND  = "typewriter-key"
+	TYPEWRITER_BELL_SOUND = "typewriter-bell"
+)
+
+var demo1Audio = []gogame.AudioAsset{
+	{BaseAsset: gogame.BaseAsset{Id: TYPEWRITER_BELL_SOUND, FilePath: "./demo_assets/audio/typewriter-key.wav"}},
+	{BaseAsset: gogame.BaseAsset{Id: TYPEWRITER_KEY_SOUND, FilePath: "./demo_assets/audio/typewriter-bell.wav"}},
+}
+
 // animation
 var typingAnimSched *gogame.FunctionScheduler
 var rotatingTextAnimSched *gogame.FunctionScheduler
@@ -36,10 +47,10 @@ func initDemo1Assets() error {
 
 	fmt.Printf("Loading Demo1 assets\n")
 
-	for _, fontAsset := range demo1Fonts {
-		err := assetHandler.AddFontAsset(fontAsset, true)
+	for _, audioAsset := range demo1Audio {
+		err := assetHandler.AddAudioAsset(audioAsset, true)
 		if err != nil {
-			return fmt.Errorf("Error occurred whilst adding a font asset:%s", err)
+			return fmt.Errorf("Error occurred whilst adding a audio asset:%s", err)
 		}
 
 	}
@@ -56,13 +67,15 @@ func initDemo1Assets() error {
 
 func initAudio() error {
 
-	if sdl.Init(sdl.INIT_AUDIO) < 0 {
-		return fmt.Errorf("Failed to init SDL audio\n")
-	}
+	/*
+		if sdl.Init(sdl.INIT_AUDIO) < 0 {
+			return fmt.Errorf("Failed to init SDL audio\n")
+		}
 
-	if !mix.OpenAudio(mix.DEFAULT_FREQUENCY, mix.DEFAULT_FORMAT, mix.DEFAULT_CHANNELS, mix.DEFAULT_CHUNKSIZE) {
-		return fmt.Errorf("Failed to open audio\n")
-	}
+		if !mix.OpenAudio(mix.DEFAULT_FREQUENCY, mix.DEFAULT_FORMAT, mix.DEFAULT_CHANNELS, mix.DEFAULT_CHUNKSIZE) {
+			return fmt.Errorf("Failed to open audio\n")
+		}
+	*/
 
 	keySound = mix.LoadWAV("./demo_assets/audio/typewriter-key.wav")
 	if keySound == nil {

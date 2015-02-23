@@ -8,6 +8,8 @@ import (
 
 	b2d "github.com/neguse/go-box2d-lite/box2dlite"
 	sdl "github.com/veandco/go-sdl2/sdl"
+	mix "github.com/veandco/go-sdl2/sdl_mixer"
+	ttf "github.com/veandco/go-sdl2/sdl_ttf"
 )
 
 const (
@@ -63,6 +65,18 @@ func NewGame(winTitle string, winWidth, winHeight int, renderCallback RenderFunc
 			return nil, nil, nil, fmt.Errorf("Error: rendered not created")
 		}
 	}
+
+	// init audio
+	if sdl.Init(sdl.INIT_AUDIO) < 0 {
+		return nil, nil, nil, fmt.Errorf("Failed to init SDL audio\n")
+	}
+
+	if !mix.OpenAudio(mix.DEFAULT_FREQUENCY, mix.DEFAULT_FORMAT, mix.DEFAULT_CHANNELS, mix.DEFAULT_CHUNKSIZE) {
+		return nil, nil, nil, fmt.Errorf("Failed to open audio\n")
+	}
+
+	// init ttf
+	ttf.Init()
 
 	gravity := b2d.Vec2{0.0, 10.0}
 	iterations := 10

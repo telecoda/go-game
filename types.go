@@ -3,6 +3,7 @@ package gogame
 import (
 	b2d "github.com/neguse/go-box2d-lite/box2dlite"
 	sdl "github.com/veandco/go-sdl2/sdl"
+	mix "github.com/veandco/go-sdl2/sdl_mixer"
 	ttf "github.com/veandco/go-sdl2/sdl_ttf"
 )
 
@@ -17,6 +18,10 @@ type Asset interface {
 	Load() error
 	Unload() error
 	Destroy() error
+}
+
+type AudioManager interface {
+	AddAudioAsset(asset AudioAsset, load bool) error // add a font
 }
 
 type FontManager interface {
@@ -35,10 +40,15 @@ type SpriteManager interface {
 // Asset manager manages all assets for a game
 type AssetManager interface {
 	Initialize() error // initialize all assets
+	AudioManager
 	FontManager
 	ImageManager
 	SpriteManager
 	Destroy() // free all assets
+}
+
+type AudioPlayer interface {
+	PlaySound(assetId string, loops int) error
 }
 
 type FontRenderer interface {
@@ -99,6 +109,7 @@ type ImageAsset struct {
 
 type AudioAsset struct {
 	BaseAsset
+	chunk *mix.Chunk
 }
 
 type assets struct {
