@@ -24,9 +24,9 @@ const (
 	RIGHT      HAlign = "right"
 )
 
-func (r renderController) RenderText(assetId string, text string, pos sdl.Point, angle float64, textColor sdl.Color, vAlign VAlign, hAlign HAlign) error {
+func (r renderController) RenderText(fontAssetId string, text string, pos sdl.Point, angle float64, textColor sdl.Color, vAlign VAlign, hAlign HAlign) error {
 
-	font, err := getFont(assetId)
+	font, err := getFont(fontAssetId)
 	if err != nil {
 		return err
 	}

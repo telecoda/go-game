@@ -95,7 +95,7 @@ func getAudioAsset(assetId string) (*AudioAsset, error) {
 	return asset, nil
 }
 
-func getAudio(assetId string) (*mix.Chunk, error) {
+func getChunk(assetId string) (*mix.Chunk, error) {
 
 	asset, err := getAudioAsset(assetId)
 	if err != nil {

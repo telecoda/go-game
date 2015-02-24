@@ -48,7 +48,7 @@ type AssetManager interface {
 }
 
 type AudioPlayer interface {
-	PlaySound(assetId string, loops int) error
+	PlayAudio(assetId string, loops int) error
 }
 
 type FontRenderer interface {
@@ -83,6 +83,7 @@ type RenderController interface {
 	TextureRenderer
 	GetRenderer() *sdl.Renderer
 	SetCallback(callback RenderFunction)
+	SetDefaultFont(fontId string) error
 }
 
 type EventHandler interface {
@@ -137,8 +138,12 @@ type renderController struct {
 	width           int
 	height          int
 	spriteLayers    SpriteLayers
-	RenderBoxes     bool
+	RenderDebugInfo bool
 	FramesPerSecond float64
+	defaultFontId   string
+}
+
+type audioPlayer struct {
 }
 
 type eventHandler struct {

@@ -88,7 +88,7 @@ func (r renderController) RenderSprite(spriteId string) error {
 
 	sprite, ok := gameAssets.spriteBank[spriteId]
 	if !ok {
-		return fmt.Errorf("aWarning: unknown sprite asset:%s\n ", spriteId)
+		return fmt.Errorf("Warning: unknown sprite asset:%s\n ", spriteId)
 	}
 
 	return sprite.render()
@@ -167,9 +167,16 @@ func renderSpriteWithOffset(sprite *Sprite, offset sdl.Point) error {
 		return err
 	}
 
-	if rendCont.RenderBoxes {
+	if rendCont.RenderDebugInfo {
 		// render outline box of sprite
 		sprite.renderBox(centre, rotInRadians)
+
+		// only render if default font set
+		spriteIdText := fmt.Sprintf("ID:%s", sprite.Id)
+		spriteIdPos := sdl.Point{sprite.Pos.X, sprite.Pos.Y + sprite.Height}
+		textColour := sdl.Color{R: 0, G: 0, B: 0, A: 255}
+		rendCont.RenderText(rendCont.defaultFontId, spriteIdText, spriteIdPos, 0.0, textColour, TOP, LEFT)
+
 	}
 
 	return nil

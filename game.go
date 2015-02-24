@@ -25,6 +25,7 @@ var gameAssets *assets
 
 var rendCont *renderController
 var eventHnd *eventHandler
+var audioPlyr *audioPlayer
 
 var FramesPerSecond = 0.0
 
@@ -35,25 +36,25 @@ func init() {
 	gameAssets.Initialize()
 }
 
-func NewGame(winTitle string, winWidth, winHeight int, renderCallback RenderFunction, eventCallback EventReceiverFunction) (AssetManager, RenderController, EventHandler, error) {
+func NewGame(winTitle string, winWidth, winHeight int, renderCallback RenderFunction, eventCallback EventReceiverFunction) (AssetManager, RenderController, AudioPlayer, EventHandler, error) {
 	window, _ := sdl.CreateWindow(
 		winTitle, sdl.WINDOWPOS_CENTERED, sdl.WINDOWPOS_CENTERED,
 		winWidth, winHeight, sdl.WINDOW_OPENGL)
 
 	if winTitle == "" {
-		return nil, nil, nil, fmt.Errorf("Error: window must have a title.")
+		return nil, nil, nil, nil, fmt.Errorf("Error: window must have a title.")
 	}
 
 	if winWidth < 1 {
-		return nil, nil, nil, fmt.Errorf("Error: window width must be greater than 0.")
+		return nil, nil, nil, nil, fmt.Errorf("Error: window width must be greater than 0.")
 	}
 
 	if winHeight < 1 {
-		return nil, nil, nil, fmt.Errorf("Error: window height must be greater than 0.")
+		return nil, nil, nil, nil, fmt.Errorf("Error: window height must be greater than 0.")
 	}
 
 	if window == nil {
-		return nil, nil, nil, fmt.Errorf("Error: window not created")
+		return nil, nil, nil, nil, fmt.Errorf("Error: window not created")
 	}
 
 	// try acceleration first
@@ -62,17 +63,17 @@ func NewGame(winTitle string, winWidth, winHeight int, renderCallback RenderFunc
 		// revert to software
 		renderer, _ := sdl.CreateRenderer(window, -2, sdl.RENDERER_SOFTWARE)
 		if renderer == nil {
-			return nil, nil, nil, fmt.Errorf("Error: rendered not created")
+			return nil, nil, nil, nil, fmt.Errorf("Error: rendered not created")
 		}
 	}
 
 	// init audio
 	if sdl.Init(sdl.INIT_AUDIO) < 0 {
-		return nil, nil, nil, fmt.Errorf("Failed to init SDL audio\n")
+		return nil, nil, nil, nil, fmt.Errorf("Failed to init SDL audio\n")
 	}
 
 	if !mix.OpenAudio(mix.DEFAULT_FREQUENCY, mix.DEFAULT_FORMAT, mix.DEFAULT_CHANNELS, mix.DEFAULT_CHUNKSIZE) {
-		return nil, nil, nil, fmt.Errorf("Failed to open audio\n")
+		return nil, nil, nil, nil, fmt.Errorf("Failed to open audio\n")
 	}
 
 	// init ttf
@@ -87,25 +88,27 @@ func NewGame(winTitle string, winWidth, winHeight int, renderCallback RenderFunc
 	gameAssets.Destroy()
 	err := gameAssets.Initialize()
 	if err != nil {
-		return nil, nil, nil, err
+		return nil, nil, nil, nil, err
 	}
 
 	rendCont = &renderController{
-		Window:         window,
-		Renderer:       renderer,
-		renderCallback: renderCallback,
-		world:          world,
-		width:          winWidth,
-		height:         winHeight,
-		spriteLayers:   make(SpriteLayers),
-		RenderBoxes:    true,
+		Window:          window,
+		Renderer:        renderer,
+		renderCallback:  renderCallback,
+		world:           world,
+		width:           winWidth,
+		height:          winHeight,
+		spriteLayers:    make(SpriteLayers),
+		RenderDebugInfo: true,
 	}
+
+	audioPlyr = &audioPlayer{}
 
 	eventHnd = &eventHandler{
 		eventCallback: eventCallback,
 	}
 
-	return gameAssets, rendCont, eventHnd, nil
+	return gameAssets, rendCont, audioPlyr, eventHnd, nil
 }
 
 func (r *renderController) SetCallback(callback RenderFunction) {
@@ -192,6 +195,20 @@ func onRender() {
 
 	}
 
+}
+
+func (r *renderController) SetDefaultFont(fontId string) error {
+	if fontId == "" {
+		return fmt.Errorf("Error: default fontId cannot be empty.")
+	}
+
+	_, err := getFont(fontId)
+	if err != nil {
+		return err
+	}
+
+	rendCont.defaultFontId = fontId
+	return nil
 }
 
 func present() {

@@ -6,7 +6,6 @@ import (
 
 	"github.com/telecoda/go-game"
 	"github.com/veandco/go-sdl2/sdl"
-	mix "github.com/veandco/go-sdl2/sdl_mixer"
 )
 
 var typingSpeed = time.Duration(100 * time.Millisecond)
@@ -23,10 +22,6 @@ var textLabels []textTyping
 
 var demo1Fonts = []gogame.FontAsset{}
 
-// audio
-var keySound *mix.Chunk
-var bellSound *mix.Chunk
-
 const (
 	// fonts
 	TYPEWRITER_KEY_SOUND  = "typewriter-key"
@@ -34,8 +29,8 @@ const (
 )
 
 var demo1Audio = []gogame.AudioAsset{
-	{BaseAsset: gogame.BaseAsset{Id: TYPEWRITER_BELL_SOUND, FilePath: "./demo_assets/audio/typewriter-key.wav"}},
-	{BaseAsset: gogame.BaseAsset{Id: TYPEWRITER_KEY_SOUND, FilePath: "./demo_assets/audio/typewriter-bell.wav"}},
+	{BaseAsset: gogame.BaseAsset{Id: TYPEWRITER_KEY_SOUND, FilePath: "./demo_assets/audio/typewriter-key.wav"}},
+	{BaseAsset: gogame.BaseAsset{Id: TYPEWRITER_BELL_SOUND, FilePath: "./demo_assets/audio/typewriter-bell.wav"}},
 }
 
 // animation
@@ -55,51 +50,21 @@ func initDemo1Assets() error {
 
 	}
 
-	err := initAudio()
-	if err != nil {
-		return err
-	}
-
 	startDemo1Animation()
-
-	return nil
-}
-
-func initAudio() error {
-
-	/*
-		if sdl.Init(sdl.INIT_AUDIO) < 0 {
-			return fmt.Errorf("Failed to init SDL audio\n")
-		}
-
-		if !mix.OpenAudio(mix.DEFAULT_FREQUENCY, mix.DEFAULT_FORMAT, mix.DEFAULT_CHANNELS, mix.DEFAULT_CHUNKSIZE) {
-			return fmt.Errorf("Failed to open audio\n")
-		}
-	*/
-
-	keySound = mix.LoadWAV("./demo_assets/audio/typewriter-key.wav")
-	if keySound == nil {
-		return fmt.Errorf("Failed to load wav\n")
-	}
-
-	bellSound = mix.LoadWAV("./demo_assets/audio/typewriter-bell.wav")
-	if bellSound == nil {
-		return fmt.Errorf("Failed to load wav\n")
-	}
 
 	return nil
 }
 
 func playKey() error {
 
-	keySound.PlayChannel(-1, 0)
+	audioPlayer.PlayAudio(TYPEWRITER_KEY_SOUND, 0)
 
 	return nil
 }
 
 func playBell() error {
 
-	bellSound.PlayChannel(-1, 0)
+	audioPlayer.PlayAudio(TYPEWRITER_BELL_SOUND, 0)
 
 	return nil
 }

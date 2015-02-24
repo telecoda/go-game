@@ -39,6 +39,7 @@ func initSharedAssets() error {
 
 	}
 
+	renderController.SetDefaultFont(SHARED_FONT_8)
 	return nil
 }
 

@@ -24,6 +24,7 @@ var demoScreen *DemoScreen
 
 var assetHandler gogame.AssetManager
 var renderController gogame.RenderController
+var audioPlayer gogame.AudioPlayer
 var eventHandler gogame.EventHandler
 
 func main() {
@@ -32,8 +33,7 @@ func main() {
 
 	var err error
 
-	// init assetHandler and renderController
-	assetHandler, renderController, eventHandler, err = gogame.NewGame("go-game demo", demoWidth, demoHeight, nil, demoEventReceiver)
+	assetHandler, renderController, audioPlayer, eventHandler, err = gogame.NewGame("go-game demo", demoWidth, demoHeight, nil, demoEventReceiver)
 	if err != nil {
 		fmt.Printf("Error creating game. Program exit.\n", err)
 		return
