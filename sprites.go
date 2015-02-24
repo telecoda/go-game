@@ -124,6 +124,12 @@ func (s *Sprite) renderBox(centre b2d.Vec2, rotInRadians float64) {
 	rendCont.Renderer.DrawLine(int(v2.X), int(v2.Y), int(v3.X), int(v3.Y))
 	rendCont.Renderer.DrawLine(int(v3.X), int(v3.Y), int(v4.X), int(v4.Y))
 	rendCont.Renderer.DrawLine(int(v4.X), int(v4.Y), int(v1.X), int(v1.Y))
+
+	// render centre point
+	rendCont.Renderer.SetDrawColor(255, 0, 0, 255)
+	rect := sdl.Rect{int32(centre.X - 1), int32(centre.Y - 1), 3, 3}
+	rendCont.Renderer.FillRect(&rect)
+
 }
 
 func renderSpriteWithOffset(sprite *Sprite, offset sdl.Point) error {
@@ -172,10 +178,24 @@ func renderSpriteWithOffset(sprite *Sprite, offset sdl.Point) error {
 		sprite.renderBox(centre, rotInRadians)
 
 		// only render if default font set
-		spriteIdText := fmt.Sprintf("ID:%s", sprite.Id)
-		spriteIdPos := sdl.Point{sprite.Pos.X, sprite.Pos.Y + sprite.Height}
+		xPos := sprite.Pos.X - sprite.Width/2
+		yPos := sprite.Pos.Y + sprite.Height/2
+		debugTextPos := sdl.Point{xPos, yPos}
 		textColour := sdl.Color{R: 0, G: 0, B: 0, A: 255}
-		rendCont.RenderText(rendCont.defaultFontId, spriteIdText, spriteIdPos, 0.0, textColour, TOP, LEFT)
+		spriteIdText := fmt.Sprintf("ID:%s", sprite.Id)
+		rendCont.RenderText(rendCont.defaultFontId, spriteIdText, debugTextPos, 0.0, textColour, TOP, LEFT)
+		spritePosText := fmt.Sprintf("X:%d Y:%d", sprite.Pos.X, sprite.Pos.Y)
+		debugTextPos = sdl.Point{xPos, debugTextPos.Y + 10}
+		rendCont.RenderText(rendCont.defaultFontId, spritePosText, debugTextPos, 0.0, textColour, TOP, LEFT)
+		spriteSizeText := fmt.Sprintf("W:%d H:%d", sprite.Width, sprite.Height)
+		debugTextPos = sdl.Point{xPos, debugTextPos.Y + 10}
+		rendCont.RenderText(rendCont.defaultFontId, spriteSizeText, debugTextPos, 0.0, textColour, TOP, LEFT)
+		spriteRotText := fmt.Sprintf("rot:%2.5f", sprite.Rotation)
+		debugTextPos = sdl.Point{xPos, debugTextPos.Y + 10}
+		rendCont.RenderText(rendCont.defaultFontId, spriteRotText, debugTextPos, 0.0, textColour, TOP, LEFT)
+		spritePhysicsText := fmt.Sprintf("physics:%t", sprite.applyPhysics)
+		debugTextPos = sdl.Point{xPos, debugTextPos.Y + 10}
+		rendCont.RenderText(rendCont.defaultFontId, spritePhysicsText, debugTextPos, 0.0, textColour, TOP, LEFT)
 
 	}
 

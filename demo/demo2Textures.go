@@ -26,8 +26,8 @@ var minSize = int32(5)
 var maxSize = int32(350)
 
 // animation
-var rotTextAnimSched *gogame.FunctionScheduler
-var rotateTextureSpeed = time.Duration(20 * time.Millisecond)
+var d2RotTextAnimSched *gogame.FunctionScheduler
+var d2RotateTextureSpeed = time.Duration(20 * time.Millisecond)
 
 var textureGrid1 = sdl.Rect{100, 200, 64, 64}
 var textureGrid2 = sdl.Rect{200, 200, 64, 64}
@@ -93,15 +93,15 @@ func startDemo2Animation() {
 
 	// init animation vars
 	angle = 0.0
-	rotTextAnimSched = gogame.NewFunctionScheduler(rotateTextureSpeed, -1, demo2AnimateRotation)
+	d2RotTextAnimSched = gogame.NewFunctionScheduler(d2RotateTextureSpeed, -1, demo2AnimateRotation)
 
-	rotTextAnimSched.Start()
+	d2RotTextAnimSched.Start()
 
 }
 
 func stopDemo2Animation() {
 
-	rotTextAnimSched.Destroy()
+	d2RotTextAnimSched.Destroy()
 
 }
 

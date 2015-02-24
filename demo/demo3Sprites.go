@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/telecoda/go-game"
 	"github.com/veandco/go-sdl2/sdl"
@@ -12,14 +13,20 @@ const (
 	D3_GOPHER_RUN = "gopherrun"
 
 	// sprites
-	D3_GOPHER_RUN_SPRITE = "gopherrun-sprite"
+	D3_GOPHER_STILL_SPRITE    = "gopher-still-sprite"
+	D3_GOPHER_SPINNING_SPRITE = "gopher-spinning-sprite"
 )
 
 var demo3Images = []gogame.ImageAsset{
 	{BaseAsset: gogame.BaseAsset{Id: D3_GOPHER_RUN, FilePath: "./demo_assets/images/sprites/gopher-run.png"}},
 }
 
-var d3GopherSprite *gogame.Sprite
+var d3StillSprite *gogame.Sprite
+var d3SpinningSprite *gogame.Sprite
+
+// animation
+var d3RotTextAnimSched *gogame.FunctionScheduler
+var d3RotateTextureSpeed = time.Duration(20 * time.Millisecond)
 
 // init assets for demo 3
 func initDemo3Assets() error {
@@ -33,11 +40,13 @@ func initDemo3Assets() error {
 
 	}
 
-	// create sprite
-	d3GopherSprite = &gogame.Sprite{Id: D3_GOPHER_RUN_SPRITE, ImageAssetId: D3_GOPHER_RUN, Pos: sdl.Point{100, 200}, Width: 32, Height: 32, Rotation: 0.0, Visible: true}
+	// create sprites
+	d3StillSprite = &gogame.Sprite{Id: D3_GOPHER_STILL_SPRITE, ImageAssetId: D3_GOPHER_RUN, Pos: sdl.Point{100, 200}, Width: 32, Height: 32, Rotation: 0.0, Visible: true}
+	d3SpinningSprite = &gogame.Sprite{Id: D3_GOPHER_SPINNING_SPRITE, ImageAssetId: D3_GOPHER_RUN, Pos: sdl.Point{512, 400}, Width: 32, Height: 32, Rotation: 0.0, Visible: true}
 
 	// add to assets
-	assetHandler.AddSprite(D3_GOPHER_RUN_SPRITE, d3GopherSprite)
+	assetHandler.AddSprite(D3_GOPHER_STILL_SPRITE, d3StillSprite)
+	assetHandler.AddSprite(D3_GOPHER_SPINNING_SPRITE, d3SpinningSprite)
 
 	startDemo3Animation()
 
@@ -50,7 +59,8 @@ func demo3RenderCallback() {
 
 	renderTitle()
 
-	renderController.RenderSprite(D3_GOPHER_RUN_SPRITE)
+	renderController.RenderSprite(D3_GOPHER_STILL_SPRITE)
+	renderController.RenderSprite(D3_GOPHER_SPINNING_SPRITE)
 }
 
 func unloadDemo3Assets() error {
@@ -64,7 +74,7 @@ func unloadDemo3Assets() error {
 
 	}
 
-	rotTextAnimSched.Destroy()
+	d3RotTextAnimSched.Destroy()
 
 	return nil
 }
@@ -73,15 +83,15 @@ func startDemo3Animation() {
 
 	// init animation vars
 	angle = 0.0
-	rotTextAnimSched = gogame.NewFunctionScheduler(rotateTextureSpeed, -1, demo2AnimateRotation)
+	d3RotTextAnimSched = gogame.NewFunctionScheduler(d3RotateTextureSpeed, -1, demo3AnimateRotation)
 
-	rotTextAnimSched.Start()
+	d3RotTextAnimSched.Start()
 
 }
 
 func stopDemo3Animation() {
 
-	rotTextAnimSched.Destroy()
+	d3RotTextAnimSched.Destroy()
 
 }
 
@@ -103,4 +113,8 @@ func demo3AnimateRotation() {
 	if sizeX < minSize {
 		sizeVelocity = sizeVelocity * -1
 	}
+
+	d3SpinningSprite.Rotation = angle
+	d3SpinningSprite.Width = sizeX
+	d3SpinningSprite.Height = sizeY
 }
