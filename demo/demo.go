@@ -131,18 +131,29 @@ func initDemoScreens() {
 		},
 		Color: white, InitAssets: initDemo1Assets, UnloadAssets: unloadDemo1Assets, RenderCallback: demo1RenderCallback}
 
-	demoScreens[2] = &DemoScreen{Id: 2, Title: "Textures:", Description: "Textures can be rendered from images loaded into the AssetManager", CodeSample: []string{
-		"// add image",
-		"imageAsset :=gogame.ImageAsset{{BaseAsset: gogame.BaseAsset{Id: \"my_image_id\", FilePath: \"my_image.png\"}}",
-		"assetHandler.AddFontAsset(fontAsset, true)",
-		"",
-		"// render textures",
-		"renderController.RenderTexture(\"my_image_id\", sdl.Point{x, y}, sizeX, sizeY)",
-		"renderController.RenderRotatedTexture(\"my_image_id\", sdl.Point{x, y}, degrees, sizeX, sizeY)",
-	},
+	demoScreens[2] = &DemoScreen{Id: 2, Title: "Textures:", Description: "Textures can be rendered from images loaded into the AssetManager. They are best for drawing static images such as backgrounds",
+		CodeSample: []string{
+			"// add image",
+			"imageAsset :=gogame.ImageAsset{{BaseAsset: gogame.BaseAsset{Id: \"my_image_id\", FilePath: \"my_image.png\"}}",
+			"assetHandler.AddFontAsset(fontAsset, true)",
+			"",
+			"// render textures",
+			"renderController.RenderTexture(\"my_image_id\", sdl.Point{x, y}, sizeX, sizeY)",
+			"renderController.RenderRotatedTexture(\"my_image_id\", sdl.Point{x, y}, degrees, sizeX, sizeY)",
+		},
 		Color: lightGrey, InitAssets: initDemo2Assets, UnloadAssets: unloadDemo2Assets, RenderCallback: demo2RenderCallback}
 
-	demoScreens[3] = &DemoScreen{Id: 3, Title: "Sprites:", Color: white, InitAssets: initDemo3Assets, UnloadAssets: unloadDemo3Assets, RenderCallback: demo3RenderCallback}
+	demoScreens[3] = &DemoScreen{Id: 3, Title: "Sprites:", Description: "Sprites allow you greater control over rendering and can be used for in game objects.",
+		CodeSample: []string{
+			"// add sprite",
+			"sprite = &gogame.Sprite{Id: \"my_sprite_id\", ImageAssetId: \"my_image_id\", Pos: sdl.Point{100, 200}, ",
+			"                                                 Width: 32, Height: 32, Rotation: 0.0, Visible: true}",
+			"assetHandler.AddSprite(sprite)",
+			"",
+			"// render sprites",
+			"renderController.RenderSprite(\"my_sprite_id\")",
+		},
+		Color: white, InitAssets: initDemo3Assets, UnloadAssets: unloadDemo3Assets, RenderCallback: demo3RenderCallback}
 	demoScreens[4] = &DemoScreen{Id: 4, Title: "Sprite Layers:", Color: lightGrey, InitAssets: initDemo4Assets, UnloadAssets: unloadDemo4Assets, RenderCallback: demo4RenderCallback}
 	demoScreens[5] = &DemoScreen{Id: 5, Title: "Audio:", Color: white, InitAssets: initDemo5Assets, UnloadAssets: unloadDemo5Assets, RenderCallback: demo5RenderCallback}
 	demoScreens[6] = &DemoScreen{Id: 6, Title: "Physics:", Color: lightGrey, InitAssets: initDemo6Assets, UnloadAssets: unloadDemo6Assets, RenderCallback: demo6RenderCallback}

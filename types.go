@@ -33,7 +33,7 @@ type ImageManager interface {
 }
 
 type SpriteManager interface {
-	AddSprite(spriteId string, sprite *Sprite) error
+	AddSprite(sprite *Sprite) error
 	GetSprite(spriteId string) (*Sprite, error)
 }
 

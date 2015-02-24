@@ -14,10 +14,14 @@ const (
 	physicsToSpriteRatio float64 = ratio / 1.0 // 32 times
 )
 
-func (a *assets) AddSprite(spriteId string, sprite *Sprite) error {
+func (a *assets) AddSprite(sprite *Sprite) error {
 
 	if sprite == nil {
 		return fmt.Errorf("Error: sprite pointer is nil")
+	}
+
+	if sprite.Id == "" {
+		return fmt.Errorf("Error: sprite.Id is empty")
 	}
 
 	if sprite.ImageAssetId != "" {
@@ -30,7 +34,7 @@ func (a *assets) AddSprite(spriteId string, sprite *Sprite) error {
 	sprite.applyPhysics = false
 	sprite.mass = 0.0
 
-	a.spriteBank[spriteId] = sprite
+	a.spriteBank[sprite.Id] = sprite
 
 	return nil
 }

@@ -45,8 +45,8 @@ func initDemo3Assets() error {
 	d3SpinningSprite = &gogame.Sprite{Id: D3_GOPHER_SPINNING_SPRITE, ImageAssetId: D3_GOPHER_RUN, Pos: sdl.Point{512, 400}, Width: 32, Height: 32, Rotation: 0.0, Visible: true}
 
 	// add to assets
-	assetHandler.AddSprite(D3_GOPHER_STILL_SPRITE, d3StillSprite)
-	assetHandler.AddSprite(D3_GOPHER_SPINNING_SPRITE, d3SpinningSprite)
+	assetHandler.AddSprite(d3StillSprite)
+	assetHandler.AddSprite(d3SpinningSprite)
 
 	startDemo3Animation()
 
