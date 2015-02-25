@@ -61,6 +61,7 @@ type SpriteRenderer interface {
 
 type LayerRenderer interface {
 	CreateSpriteLayer(layerId int, pos sdl.Point) (*SpriteLayer, error)
+	DestroySpriteLayer(layerId int) error
 	RenderLayers() error
 }
 
@@ -84,6 +85,7 @@ type RenderController interface {
 	GetRenderer() *sdl.Renderer
 	SetCallback(callback RenderFunction)
 	SetDefaultFont(fontId string) error
+	SetDebugInfo(enabled bool)
 }
 
 type EventHandler interface {
@@ -169,6 +171,9 @@ type Sprite struct {
 type SpriteLayer struct {
 	Pos     sdl.Point
 	Visible bool
+	Wrap    bool
+	Width   int32
+	Height  int32
 	Sprites spriteMap
 }
 type SpriteLayers map[int]*SpriteLayer

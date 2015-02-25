@@ -154,7 +154,8 @@ func initDemoScreens() {
 			"renderController.RenderSprite(\"my_sprite_id\")",
 		},
 		Color: white, InitAssets: initDemo3Assets, UnloadAssets: unloadDemo3Assets, RenderCallback: demo3RenderCallback}
-	demoScreens[4] = &DemoScreen{Id: 4, Title: "Sprite Layers:", Color: lightGrey, InitAssets: initDemo4Assets, UnloadAssets: unloadDemo4Assets, RenderCallback: demo4RenderCallback}
+	demoScreens[4] = &DemoScreen{Id: 4, Title: "Sprite Layers:", Description: "Sprites can be managed as a group by adding them to a SpriteLayer",
+		Color: lightGrey, InitAssets: initDemo4Assets, UnloadAssets: unloadDemo4Assets, RenderCallback: demo4RenderCallback}
 	demoScreens[5] = &DemoScreen{Id: 5, Title: "Audio:", Color: white, InitAssets: initDemo5Assets, UnloadAssets: unloadDemo5Assets, RenderCallback: demo5RenderCallback}
 	demoScreens[6] = &DemoScreen{Id: 6, Title: "Physics:", Color: lightGrey, InitAssets: initDemo6Assets, UnloadAssets: unloadDemo6Assets, RenderCallback: demo6RenderCallback}
 	demoScreens[7] = &DemoScreen{Id: 7, Title: "Utilities:", Color: white, InitAssets: initDemo7Assets, UnloadAssets: unloadDemo7Assets, RenderCallback: demo7RenderCallback}

@@ -28,6 +28,8 @@ var d3SpinningSprite *gogame.Sprite
 var d3RotTextAnimSched *gogame.FunctionScheduler
 var d3RotateTextureSpeed = time.Duration(20 * time.Millisecond)
 
+var d3DebugInfoSched *gogame.FunctionScheduler
+
 // init assets for demo 3
 func initDemo3Assets() error {
 	fmt.Printf("Loading Demo3 assets\n")
@@ -74,7 +76,7 @@ func unloadDemo3Assets() error {
 
 	}
 
-	d3RotTextAnimSched.Destroy()
+	stopDemo3Animation()
 
 	return nil
 }
@@ -85,15 +87,21 @@ func startDemo3Animation() {
 	angle = 0.0
 	d3RotTextAnimSched = gogame.NewFunctionScheduler(d3RotateTextureSpeed, -1, demo3AnimateRotation)
 
-	d3RotTextAnimSched.Start()
+	renderController.SetDebugInfo(false)
+	d3DebugInfoSched = gogame.NewFunctionScheduler(time.Duration(5*time.Second), 1, func() { renderController.SetDebugInfo(true) })
 
+	d3RotTextAnimSched.Start()
+	d3DebugInfoSched.Start()
 }
 
 func stopDemo3Animation() {
 
 	d3RotTextAnimSched.Destroy()
+	d3DebugInfoSched.Destroy()
 
 }
+
+func demo3EnableDebugInfo() {}
 
 func demo3AnimateRotation() {
 

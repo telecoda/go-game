@@ -17,9 +17,22 @@ func (r renderController) CreateSpriteLayer(layerId int, pos sdl.Point) (*Sprite
 		layer.Sprites = make(spriteMap)
 		return layer, nil
 	} else {
-		return nil, fmt.Errorf("Error sprite layer :%d already exists")
+		return nil, fmt.Errorf("Error sprite layer :%d already exists", layerId)
 	}
 
+}
+
+func (r renderController) DestroySpriteLayer(layerId int) error {
+
+	_, ok := r.spriteLayers[layerId]
+	if ok {
+		// destroy
+		delete(r.spriteLayers, layerId)
+		fmt.Printf("Destroying sprite layer :%d\n", layerId)
+		return nil
+	} else {
+		return fmt.Errorf("Error sprite layer :%d does not exist", layerId)
+	}
 }
 
 func newSpriteLayer(pos sdl.Point) *SpriteLayer {
@@ -28,6 +41,8 @@ func newSpriteLayer(pos sdl.Point) *SpriteLayer {
 		Pos:     pos,
 		Visible: true,
 		Sprites: make(spriteMap),
+		Width:   int32(rendCont.width),
+		Height:  int32(rendCont.height),
 	}
 
 	return &layer
@@ -78,10 +93,25 @@ func (l *SpriteLayer) render() error {
 
 	sort.Strings(ids)
 	for _, id := range ids {
-		err := renderSpriteWithOffset(l.Sprites[id], l.Pos)
+
+		sprite := l.Sprites[id]
+		offset := l.Pos
+		if l.Wrap {
+			// check if sprite offscreen
+			offsetX := sprite.Pos.X + l.Pos.X
+			offsetY := sprite.Pos.Y + l.Pos.Y
+
+			wrappedX := offsetX % int32(l.Width)
+			wrappedY := offsetY % int32(l.Height)
+
+			offset = sdl.Point{wrappedX - sprite.Pos.X, wrappedY - sprite.Pos.Y}
+		}
+		// no wrapping
+		err := renderSpriteWithOffset(l.Sprites[id], offset)
 		if err != nil {
 			return err
 		}
+
 	}
 
 	return nil

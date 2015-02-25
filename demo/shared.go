@@ -47,9 +47,9 @@ func renderTitle() {
 
 	// Title
 	// shadows
-	renderController.RenderText(SHARED_FONT_128, demoScreen.Title, sdl.Point{X: 25, Y: 10}, 0.0, darkGrey, gogame.TOP, gogame.LEFT)
+	renderController.RenderText(SHARED_FONT_128, demoScreen.Title, sdl.Point{X: 25, Y: 5}, 0.0, darkGrey, gogame.TOP, gogame.LEFT)
 	// titles
-	renderController.RenderText(SHARED_FONT_128, demoScreen.Title, sdl.Point{X: 20, Y: 15}, 0.0, black, gogame.TOP, gogame.LEFT)
+	renderController.RenderText(SHARED_FONT_128, demoScreen.Title, sdl.Point{X: 20, Y: 10}, 0.0, black, gogame.TOP, gogame.LEFT)
 
 	// Description
 	renderController.RenderText(SHARED_FONT_16, demoScreen.Description, sdl.Point{50, 160}, 0.0, black, gogame.TOP, gogame.LEFT)

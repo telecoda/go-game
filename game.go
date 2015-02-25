@@ -99,7 +99,7 @@ func NewGame(winTitle string, winWidth, winHeight int, renderCallback RenderFunc
 		width:           winWidth,
 		height:          winHeight,
 		spriteLayers:    make(SpriteLayers),
-		RenderDebugInfo: true,
+		RenderDebugInfo: false,
 	}
 
 	audioPlyr = &audioPlayer{}
@@ -113,6 +113,10 @@ func NewGame(winTitle string, winWidth, winHeight int, renderCallback RenderFunc
 
 func (r *renderController) SetCallback(callback RenderFunction) {
 	r.renderCallback = callback
+}
+
+func (r *renderController) SetDebugInfo(enabled bool) {
+	r.RenderDebugInfo = enabled
 }
 
 // allow low level access to SDL renderer
