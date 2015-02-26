@@ -155,6 +155,17 @@ func initDemoScreens() {
 		},
 		Color: white, InitAssets: initDemo3Assets, UnloadAssets: unloadDemo3Assets, RenderCallback: demo3RenderCallback}
 	demoScreens[4] = &DemoScreen{Id: 4, Title: "Sprite Layers:", Description: "Sprites can be managed as a group by adding them to a SpriteLayer",
+		CodeSample: []string{
+			"layer, err := renderController.CreateSpriteLayer(layerId, sdl.Point{0, 0})",
+			"// add sprite to layer",
+			"sprite = &gogame.Sprite{Id: \"my_sprite_id\", ImageAssetId: \"my_image_id\", Pos: sdl.Point{100, 200}, ",
+			"                                                 Width: 32, Height: 32, Rotation: 0.0, Visible: true}",
+			"assetHandler.AddSprite(sprite)",
+			"layer.AddSpriteToLayer(\"my_sprite_id\")",
+			"// render ALL layers 0=nearest",
+			"renderController.RenderLayers()",
+		},
+
 		Color: lightGrey, InitAssets: initDemo4Assets, UnloadAssets: unloadDemo4Assets, RenderCallback: demo4RenderCallback}
 	demoScreens[5] = &DemoScreen{Id: 5, Title: "Audio:", Color: white, InitAssets: initDemo5Assets, UnloadAssets: unloadDemo5Assets, RenderCallback: demo5RenderCallback}
 	demoScreens[6] = &DemoScreen{Id: 6, Title: "Physics:", Color: lightGrey, InitAssets: initDemo6Assets, UnloadAssets: unloadDemo6Assets, RenderCallback: demo6RenderCallback}

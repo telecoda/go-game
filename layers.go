@@ -35,10 +35,10 @@ func (r renderController) DestroySpriteLayer(layerId int) error {
 	}
 }
 
-func newSpriteLayer(pos sdl.Point) *SpriteLayer {
+func newSpriteLayer(offset sdl.Point) *SpriteLayer {
 
 	layer := SpriteLayer{
-		Pos:     pos,
+		Offset:  offset,
 		Visible: true,
 		Sprites: make(spriteMap),
 		Width:   int32(rendCont.width),
@@ -95,19 +95,21 @@ func (l *SpriteLayer) render() error {
 	for _, id := range ids {
 
 		sprite := l.Sprites[id]
-		offset := l.Pos
+		offset := l.Offset
 		if l.Wrap {
 			// check if sprite offscreen
-			offsetX := sprite.Pos.X + l.Pos.X
-			offsetY := sprite.Pos.Y + l.Pos.Y
+			offsetX := sprite.Pos.X + l.Offset.X
+			offsetY := sprite.Pos.Y + l.Offset.Y
 
 			wrappedX := offsetX % int32(l.Width)
 			wrappedY := offsetY % int32(l.Height)
 
 			offset = sdl.Point{wrappedX - sprite.Pos.X, wrappedY - sprite.Pos.Y}
 		}
-		// no wrapping
-		err := renderSpriteWithOffset(l.Sprites[id], offset)
+
+		pos := sdl.Point{l.AbsPos.X + offset.X, l.AbsPos.Y + offset.Y}
+
+		err := renderSpriteWithOffset(l.Sprites[id], pos)
 		if err != nil {
 			return err
 		}

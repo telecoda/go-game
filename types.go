@@ -169,7 +169,8 @@ type Sprite struct {
 }
 
 type SpriteLayer struct {
-	Pos     sdl.Point
+	AbsPos  sdl.Point
+	Offset  sdl.Point
 	Visible bool
 	Wrap    bool
 	Width   int32

@@ -24,7 +24,7 @@ var d4Layer2 *gogame.SpriteLayer
 
 // animation
 var d4ScrollAnimSched *gogame.FunctionScheduler
-var d4ScrollSpeed = time.Duration(10 * time.Millisecond)
+var d4ScrollSpeed = time.Duration(20 * time.Millisecond)
 
 // init assets for demo 4
 func initDemo4Assets() error {
@@ -47,20 +47,29 @@ func initDemo4Assets() error {
 		return err
 	}
 
-	d4Layer0.Wrap = false
+	// nearest layer
+	d4Layer0.Offset = sdl.Point{0, 64}
+	d4Layer0.AbsPos = sdl.Point{-32, 0}
+	d4Layer0.Wrap = true
+	d4Layer0.Width = int32(demoWidth + 64)
 
 	d4Layer1, err = demo4CreateLayer(1)
 	if err != nil {
 		return err
 	}
 
-	d4Layer1.Wrap = false
+	d4Layer1.Offset = sdl.Point{0, 32}
+	d4Layer1.AbsPos = sdl.Point{-32, 0}
+	d4Layer1.Wrap = true
+	d4Layer1.Width = int32(demoWidth + 64)
 
 	d4Layer2, err = demo4CreateLayer(2)
 	if err != nil {
 		return err
 	}
 
+	d4Layer2.Offset = sdl.Point{0, 0}
+	d4Layer2.AbsPos = sdl.Point{-32, 0}
 	d4Layer2.Wrap = true
 	d4Layer2.Width = int32(demoWidth + 64)
 
@@ -75,12 +84,12 @@ func demo4CreateLayer(layerId int) (*gogame.SpriteLayer, error) {
 		return nil, err
 
 	}
-	for x := 0; x < 25; x++ {
-		for y := 0; y < 10; y++ {
+	for x := 0; x < 17; x++ {
+		for y := 0; y < 5; y++ {
 
 			spriteId := fmt.Sprintf("d4sprite x:%2d y:%2d l:%2d", x, y, layerId)
-			size := int32((3 - layerId) * 32)
-			sprite := &gogame.Sprite{Id: spriteId, ImageAssetId: D4_GOPHER_RUN, Pos: sdl.Point{int32(x*40) + 32, int32(y*40) + 200}, Width: size, Height: size, Rotation: 0.0, Visible: true}
+			size := int32((3 - layerId) * 16)
+			sprite := &gogame.Sprite{Id: spriteId, ImageAssetId: D4_GOPHER_RUN, Pos: sdl.Point{int32(x*64) + 32, int32(y*64 + 200)}, Width: size, Height: size, Rotation: 0.0, Visible: true}
 
 			// add sprite in sprite bank
 			assetHandler.AddSprite(sprite)
@@ -143,8 +152,8 @@ func stopDemo4Animation() {
 
 func demo4AnimateScrolling() {
 
-	d4Layer0.Pos = sdl.Point{d4Layer0.Pos.X + 3, d4Layer0.Pos.Y}
-	d4Layer1.Pos = sdl.Point{d4Layer1.Pos.X + 2, d4Layer1.Pos.Y}
-	d4Layer2.Pos = sdl.Point{d4Layer2.Pos.X + 1, d4Layer2.Pos.Y}
+	d4Layer0.Offset = sdl.Point{d4Layer0.Offset.X + 3, d4Layer0.Offset.Y}
+	d4Layer1.Offset = sdl.Point{d4Layer1.Offset.X + 2, d4Layer1.Offset.Y}
+	d4Layer2.Offset = sdl.Point{d4Layer2.Offset.X + 1, d4Layer2.Offset.Y}
 
 }
