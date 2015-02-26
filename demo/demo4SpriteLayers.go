@@ -25,6 +25,10 @@ var d4Layer2 *gogame.SpriteLayer
 // animation
 var d4ScrollAnimSched *gogame.FunctionScheduler
 var d4ScrollSpeed = time.Duration(20 * time.Millisecond)
+var d4AnimThreshold = time.Duration(22 * time.Millisecond)
+
+var d4AnimLastTime time.Time
+var d4AnimLastDuratiom time.Duration
 
 // init assets for demo 4
 func initDemo4Assets() error {
@@ -140,6 +144,8 @@ func startDemo4Animation() {
 	//offset = 0.0
 	d4ScrollAnimSched = gogame.NewFunctionScheduler(d4ScrollSpeed, -1, demo4AnimateScrolling)
 
+	d4AnimLastTime = time.Now()
+
 	d4ScrollAnimSched.Start()
 
 }
@@ -152,7 +158,18 @@ func stopDemo4Animation() {
 
 func demo4AnimateScrolling() {
 
-	d4Layer0.Offset = sdl.Point{d4Layer0.Offset.X + 3, d4Layer0.Offset.Y}
+	// TEMP code to check animation timings
+	currentTime := time.Now()
+
+	d4AnimLastDuratiom = currentTime.Sub(d4AnimLastTime)
+
+	d4AnimLastTime = currentTime
+
+	if d4AnimLastDuratiom > d4AnimThreshold {
+		fmt.Printf("Animation delay (nanos): %d expected (nanos): %d diff: %d\n", d4AnimLastDuratiom.Nanoseconds(), d4ScrollSpeed.Nanoseconds(), d4AnimLastDuratiom.Nanoseconds()-d4ScrollSpeed.Nanoseconds())
+	}
+
+	d4Layer0.Offset = sdl.Point{d4Layer0.Offset.X + 4, d4Layer0.Offset.Y}
 	d4Layer1.Offset = sdl.Point{d4Layer1.Offset.X + 2, d4Layer1.Offset.Y}
 	d4Layer2.Offset = sdl.Point{d4Layer2.Offset.X + 1, d4Layer2.Offset.Y}
 
