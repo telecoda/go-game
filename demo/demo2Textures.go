@@ -11,11 +11,11 @@ import (
 const (
 
 	// images
-	D2_GOPHER_RUN = "gopherrun"
+	D2_GOPHER_RUN_IMAGE = "gopherrun"
 )
 
 var demo2Images = []gogame.ImageAsset{
-	{BaseAsset: gogame.BaseAsset{Id: D2_GOPHER_RUN, FilePath: "./demo_assets/images/sprites/gopher-run.png"}},
+	{BaseAsset: gogame.BaseAsset{Id: D2_GOPHER_RUN_IMAGE, FilePath: "./demo_assets/images/sprites/gopher-run.png"}},
 }
 
 var angle = 0.0
@@ -64,11 +64,11 @@ func demo2RenderCallback() {
 	renderController.RenderGridInRect(textureGrid3, 4, 4, black)
 	renderController.RenderGridInRect(textureGrid4, 4, 4, black)
 	renderController.RenderGridInRect(textureGrid5, 4, 4, black)
-	renderController.RenderTexture(D2_GOPHER_RUN, sdl.Point{100, 200}, 32, 32)
-	renderController.RenderTexture(D2_GOPHER_RUN, sdl.Point{200, 200}, 64, 32)
-	renderController.RenderTexture(D2_GOPHER_RUN, sdl.Point{300, 200}, 32, 64)
-	renderController.RenderTexture(D2_GOPHER_RUN, sdl.Point{400, 200}, 64, 64)
-	renderController.RenderRotatedTexture(D2_GOPHER_RUN, sdl.Point{500, 200}, angle, sizeX, sizeY)
+	renderController.RenderTexture(D2_GOPHER_RUN_IMAGE, sdl.Point{100, 200}, 32, 32)
+	renderController.RenderTexture(D2_GOPHER_RUN_IMAGE, sdl.Point{200, 200}, 64, 32)
+	renderController.RenderTexture(D2_GOPHER_RUN_IMAGE, sdl.Point{300, 200}, 32, 64)
+	renderController.RenderTexture(D2_GOPHER_RUN_IMAGE, sdl.Point{400, 200}, 64, 64)
+	renderController.RenderRotatedTexture(D2_GOPHER_RUN_IMAGE, sdl.Point{500, 200}, angle, sizeX, sizeY)
 
 	return
 }

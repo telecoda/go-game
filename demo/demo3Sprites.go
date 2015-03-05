@@ -10,7 +10,7 @@ import (
 
 const (
 	// images
-	D3_GOPHER_RUN = "gopherrun"
+	D3_GOPHER_RUN_IMAGE = "gopherrun"
 
 	// sprites
 	D3_GOPHER_STILL_SPRITE    = "gopher-still-sprite"
@@ -18,7 +18,7 @@ const (
 )
 
 var demo3Images = []gogame.ImageAsset{
-	{BaseAsset: gogame.BaseAsset{Id: D3_GOPHER_RUN, FilePath: "./demo_assets/images/sprites/gopher-run.png"}},
+	{BaseAsset: gogame.BaseAsset{Id: D3_GOPHER_RUN_IMAGE, FilePath: "./demo_assets/images/sprites/gopher-run.png"}},
 }
 
 var d3StillSprite *gogame.Sprite
@@ -43,8 +43,8 @@ func initDemo3Assets() error {
 	}
 
 	// create sprites
-	d3StillSprite = &gogame.Sprite{Id: D3_GOPHER_STILL_SPRITE, ImageAssetId: D3_GOPHER_RUN, Pos: sdl.Point{100, 200}, Width: 32, Height: 32, Rotation: 0.0, Visible: true}
-	d3SpinningSprite = &gogame.Sprite{Id: D3_GOPHER_SPINNING_SPRITE, ImageAssetId: D3_GOPHER_RUN, Pos: sdl.Point{512, 400}, Width: 32, Height: 32, Rotation: 0.0, Visible: true}
+	d3StillSprite = &gogame.Sprite{Id: D3_GOPHER_STILL_SPRITE, ImageAssetId: D3_GOPHER_RUN_IMAGE, Pos: sdl.Point{100, 200}, Width: 32, Height: 32, Rotation: 0.0, Visible: true}
+	d3SpinningSprite = &gogame.Sprite{Id: D3_GOPHER_SPINNING_SPRITE, ImageAssetId: D3_GOPHER_RUN_IMAGE, Pos: sdl.Point{512, 400}, Width: 32, Height: 32, Rotation: 0.0, Visible: true}
 
 	// add to assets
 	assetHandler.AddSprite(d3StillSprite)
@@ -100,8 +100,6 @@ func stopDemo3Animation() {
 	d3DebugInfoSched.Destroy()
 
 }
-
-func demo3EnableDebugInfo() {}
 
 func demo3AnimateRotation() {
 

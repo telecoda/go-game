@@ -17,6 +17,7 @@ const (
 	RadToDeg       = 180 / math.Pi
 	DegToRad       = math.Pi / 180
 	SYSTEM_FONT_ID = "system-font-id"
+	ImmovableMass  = math.MaxFloat64
 )
 
 var lastFrame = time.Now()

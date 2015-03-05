@@ -61,7 +61,7 @@ func (s *Sprite) EnablePhysics(mass float64) {
 	body := b2d.Body{}
 	body.Set(&sizeOfBody, mass)
 
-	posOfBody := b2d.Vec2{float64(s.Pos.X+s.Width/2) * spriteToPhysicsRatio, float64(s.Pos.Y+s.Height/2) * spriteToPhysicsRatio}
+	posOfBody := b2d.Vec2{float64(s.Pos.X) * spriteToPhysicsRatio, float64(s.Pos.Y) * spriteToPhysicsRatio}
 
 	body.Position = posOfBody
 	body.Rotation = s.Rotation * DegToRad
@@ -182,8 +182,8 @@ func renderSpriteWithOffset(sprite *Sprite, offset sdl.Point) error {
 		sprite.renderBox(centre, rotInRadians)
 
 		// only render if default font set
-		xPos := sprite.Pos.X - sprite.Width/2
-		yPos := sprite.Pos.Y + sprite.Height/2
+		xPos := int32(centre.X) - sprite.Width/2
+		yPos := int32(centre.Y) + sprite.Height/2
 		debugTextPos := sdl.Point{xPos, yPos}
 		textColour := sdl.Color{R: 0, G: 0, B: 0, A: 255}
 		spriteIdText := fmt.Sprintf("ID:%s", sprite.Id)
@@ -200,6 +200,18 @@ func renderSpriteWithOffset(sprite *Sprite, offset sdl.Point) error {
 		spritePhysicsText := fmt.Sprintf("physics:%t", sprite.applyPhysics)
 		debugTextPos = sdl.Point{xPos, debugTextPos.Y + 10}
 		rendCont.RenderText(rendCont.defaultFontId, spritePhysicsText, debugTextPos, 0.0, textColour, TOP, LEFT)
+		if sprite.applyPhysics {
+			// also render physics info
+			var spritePhysicsText string
+			if sprite.body.Mass == ImmovableMass {
+				spritePhysicsText = fmt.Sprintf("body x:%2.5f y:%2.5f mass:ImmovableMass", sprite.body.Position.X, sprite.body.Position.Y)
+			} else {
+				spritePhysicsText = fmt.Sprintf("body x:%2.5f y:%2.5f mass:%2.5f", sprite.body.Position.X, sprite.body.Position.Y, sprite.body.Mass)
+			}
+			debugTextPos = sdl.Point{xPos, debugTextPos.Y + 10}
+			rendCont.RenderText(rendCont.defaultFontId, spritePhysicsText, debugTextPos, 0.0, textColour, TOP, LEFT)
+
+		}
 
 	}
 

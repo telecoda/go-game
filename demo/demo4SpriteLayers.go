@@ -10,11 +10,11 @@ import (
 
 const (
 	// images
-	D4_GOPHER_RUN = "gopherrun"
+	D4_GOPHER_RUN_IMAGE = "gopherrun"
 )
 
 var demo4Images = []gogame.ImageAsset{
-	{BaseAsset: gogame.BaseAsset{Id: D4_GOPHER_RUN, FilePath: "./demo_assets/images/sprites/gopher-run.png"}},
+	{BaseAsset: gogame.BaseAsset{Id: D4_GOPHER_RUN_IMAGE, FilePath: "./demo_assets/images/sprites/gopher-run.png"}},
 }
 
 // sprite layers
@@ -93,7 +93,7 @@ func demo4CreateLayer(layerId int) (*gogame.SpriteLayer, error) {
 
 			spriteId := fmt.Sprintf("d4sprite x:%2d y:%2d l:%2d", x, y, layerId)
 			size := int32((3 - layerId) * 16)
-			sprite := &gogame.Sprite{Id: spriteId, ImageAssetId: D4_GOPHER_RUN, Pos: sdl.Point{int32(x*64) + 32, int32(y*64 + 200)}, Width: size, Height: size, Rotation: 0.0, Visible: true}
+			sprite := &gogame.Sprite{Id: spriteId, ImageAssetId: D4_GOPHER_RUN_IMAGE, Pos: sdl.Point{int32(x*64) + 32, int32(y*64 + 200)}, Width: size, Height: size, Rotation: 0.0, Visible: true}
 
 			// add sprite in sprite bank
 			assetHandler.AddSprite(sprite)
