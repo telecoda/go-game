@@ -35,10 +35,7 @@ var d6FloorSprite4 *gogame.Sprite
 var d6FloorSprite5 *gogame.Sprite
 
 // animation
-var d6RotTextAnimSched *gogame.FunctionScheduler
-var d6RotateTextureSpeed = time.Duration(20 * time.Millisecond)
 
-var d6DebugInfoSched *gogame.FunctionScheduler
 var d6EnabledPhysicsSched *gogame.FunctionScheduler
 var d6GopherDropperSched *gogame.FunctionScheduler
 
@@ -66,7 +63,7 @@ func initDemo6Assets() error {
 	d6GopherCount = 0
 
 	// create sprites
-	d6MainFloorSprite = &gogame.Sprite{Id: "main-floor-sprite", ImageAssetId: D6_FLOOR_IMAGE, Pos: sdl.Point{512, 700}, Width: 1024, Height: 34, Rotation: 0.0, Visible: true}
+	d6MainFloorSprite = &gogame.Sprite{Id: "main-floor-sprite", ImageAssetId: D6_FLOOR_IMAGE, Pos: sdl.Point{512, 750}, Width: 1024, Height: 34, Rotation: 0.0, Visible: true}
 
 	d6FloorSprite1 = &gogame.Sprite{Id: "floor-sprite-1", ImageAssetId: D6_FLOOR_SHORT_IMAGE, Pos: sdl.Point{512 - 80, 275}, Width: 132, Height: 21, Rotation: 25.0, Visible: true}
 	d6FloorSprite2 = &gogame.Sprite{Id: "floor-sprite-2", ImageAssetId: D6_FLOOR_SHORT_IMAGE, Pos: sdl.Point{512 + 80, 350}, Width: 132, Height: 21, Rotation: -25.0, Visible: true}
@@ -127,16 +124,13 @@ func startDemo6Animation() {
 	// init animation vars
 
 	renderController.SetDebugInfo(false)
-	d6DebugInfoSched = gogame.NewFunctionScheduler(time.Duration(2*time.Second), 1, func() { renderController.SetDebugInfo(true) })
-	d6EnabledPhysicsSched = gogame.NewFunctionScheduler(time.Duration(5*time.Second), 1, func() { demo6EnablePhysics() })
+	d6EnabledPhysicsSched = gogame.NewFunctionScheduler(time.Duration(2*time.Second), 1, func() { demo6EnablePhysics() })
 	d6GopherDropperSched = gogame.NewFunctionScheduler(time.Duration(2*time.Second), 100, demo6DropGopher)
-	//d6DebugInfoSched.Start()
 	d6EnabledPhysicsSched.Start()
 }
 
 func stopDemo6Animation() {
 
-	d6DebugInfoSched.Destroy()
 	d6EnabledPhysicsSched.Destroy()
 	d6GopherDropperSched.Destroy()
 }
@@ -156,7 +150,6 @@ func demo6EnablePhysics() {
 }
 
 func demo6DropGopher() {
-	fmt.Printf("Dropping a gopher...\n")
 
 	d6GopherCount++
 	d6GopherSprite := &gogame.Sprite{Id: "gopher-sprite-" + strconv.Itoa(d6GopherCount), ImageAssetId: D6_GOPHER_RUN_IMAGE, Pos: sdl.Point{512 - 80, 200}, Width: 26, Height: 32, Rotation: 0.0, Visible: true}

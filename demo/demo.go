@@ -165,11 +165,27 @@ func initDemoScreens() {
 			"// render ALL layers 0=nearest",
 			"renderController.RenderLayers()",
 		},
-
 		Color: lightGrey, InitAssets: initDemo4Assets, UnloadAssets: unloadDemo4Assets, RenderCallback: demo4RenderCallback}
-	demoScreens[5] = &DemoScreen{Id: 5, Title: "Audio:", Color: white, InitAssets: initDemo5Assets, UnloadAssets: unloadDemo5Assets, RenderCallback: demo5RenderCallback}
-	demoScreens[6] = &DemoScreen{Id: 6, Title: "Physics:", Color: lightGrey, InitAssets: initDemo6Assets, UnloadAssets: unloadDemo6Assets, RenderCallback: demo6RenderCallback}
-	demoScreens[7] = &DemoScreen{Id: 7, Title: "Utilities:", Color: white, InitAssets: initDemo7Assets, UnloadAssets: unloadDemo7Assets, RenderCallback: demo7RenderCallback}
+	demoScreens[5] = &DemoScreen{Id: 5, Title: "Audio:", Description: "Audio can be controlled by the AudioPlayer",
+		CodeSample: []string{
+			"// add some audio (use true to load the audio at the same time",
+			"audioAsset := {BaseAsset: gogame.BaseAsset{Id: \"my_audio_id\", FilePath: \"./demo_assets/audio/typewriter-key.wav\"}}",
+			"assetHandler.AddAudioAsset(audioAsset, true)",
+			"",
+			"// play it",
+			"audioPlayer.PlayAudio(\"my_audio_id\", 0)",
+		},
+		Color: white, InitAssets: initDemo5Assets, UnloadAssets: unloadDemo5Assets, RenderCallback: demo5RenderCallback}
+	demoScreens[6] = &DemoScreen{Id: 6, Title: "Physics:", Description: "By enabling physics on a sprite means the sprite is controlled by the physics engine",
+		CodeSample: []string{
+			"// enable physics (provide a mass for the sprite eg. 0.2kg's",
+			"gopherSprite.EnablePhysics(0.2)",
+			"",
+			"// add an immovable physics sprite (stuff will bounce off it)",
+			"floorSprite.EnablePhysics(gogame.ImmovableMass)",
+		},
+		Color: lightGrey, InitAssets: initDemo6Assets, UnloadAssets: unloadDemo6Assets, RenderCallback: demo6RenderCallback}
+	demoScreens[7] = &DemoScreen{Id: 7, Title: "Joints:", Color: white, InitAssets: initDemo7Assets, UnloadAssets: unloadDemo7Assets, RenderCallback: demo7RenderCallback}
 	demoScreens[8] = &DemoScreen{Id: 8, Title: "Game:", Color: white, InitAssets: initDemo8Assets, UnloadAssets: unloadDemo8Assets, RenderCallback: demo8RenderCallback}
 	demoScreens[9] = &DemoScreen{Id: 9, Title: "Credits:", Color: lightGrey, InitAssets: initDemo9Assets, UnloadAssets: unloadDemo9Assets, RenderCallback: demo9RenderCallback}
 
