@@ -120,6 +120,8 @@ func demo4RenderCallback() {
 func unloadDemo4Assets() error {
 	fmt.Printf("Unloading Demo4 assets\n")
 
+	stopDemo4Animation()
+
 	renderController.DestroySpriteLayer(0)
 	renderController.DestroySpriteLayer(1)
 	renderController.DestroySpriteLayer(2)
@@ -131,8 +133,6 @@ func unloadDemo4Assets() error {
 		}
 
 	}
-
-	stopDemo4Animation()
 
 	return nil
 }

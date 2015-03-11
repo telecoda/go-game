@@ -104,6 +104,10 @@ func demo6RenderCallback() {
 func unloadDemo6Assets() error {
 	fmt.Printf("Unloading Demo6 assets\n")
 
+	stopDemo6Animation()
+
+	renderController.DestroySpriteLayer(0)
+
 	for _, imageAsset := range demo6Images {
 		err := imageAsset.Unload()
 		if err != nil {
@@ -112,9 +116,7 @@ func unloadDemo6Assets() error {
 
 	}
 
-	renderController.DestroySpriteLayer(0)
 
-	stopDemo6Animation()
 
 	return nil
 }

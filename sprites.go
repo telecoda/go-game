@@ -74,6 +74,34 @@ func (s *Sprite) EnablePhysics(mass float64) {
 
 }
 
+func (sprite1 *Sprite) JoinTo(sprite2 *Sprite, atPoint sdl.Point) error {
+
+	// both sprites MUST have physics enabled
+	if !sprite1.applyPhysics {
+		return fmt.Errorf("Error sprite:%s does not have physics enabled", sprite1.Id)
+	}
+
+	if !sprite2.applyPhysics {
+		return fmt.Errorf("Error sprite:%s does not have physics enabled", sprite2.Id)
+	}
+
+	joint := b2d.Joint{}
+
+	jointPos := &b2d.Vec2{float64(atPoint.X+sprite1.Pos.X) * spriteToPhysicsRatio, float64(atPoint.Y+sprite1.Pos.Y) * spriteToPhysicsRatio}
+	fmt.Printf("atPoint:%v\n", atPoint)
+	fmt.Printf("joint pos:%v\n", jointPos)
+
+	joint.Set(sprite1.body, sprite2.body, jointPos)
+
+	fmt.Printf("sprite1 body:%v\n", sprite1.body)
+	fmt.Printf("sprite2 body:%v\n", sprite2.body)
+	fmt.Printf("Joint details:%v\n", joint)
+
+	rendCont.world.AddJoint(&joint)
+
+	return nil
+}
+
 func (s *Sprite) SetImage(assetId string) error {
 
 	image, texture, err := getImage(assetId)
@@ -110,6 +138,24 @@ func (s *Sprite) render() error {
 	}
 
 	return renderSpriteWithOffset(s, sdl.Point{0.0, 0.0})
+
+}
+
+func (r renderController) renderJoints() {
+
+	rendCont.Renderer.SetDrawColor(0x00, 0xff, 0x00, 0xff)
+
+	for _, joint := range rendCont.world.Joints {
+
+		joint1X := (joint.LocalAnchor1.X + joint.Body1.Position.X) * physicsToSpriteRatio
+		joint1Y := (joint.LocalAnchor1.Y + joint.Body1.Position.Y) * physicsToSpriteRatio
+
+		//TODO - adjust rendering to compensate for rotations
+
+		rect := sdl.Rect{int32(joint1X - 1), int32(joint1Y - 1), 3, 3}
+		rendCont.Renderer.FillRect(&rect)
+
+	}
 
 }
 

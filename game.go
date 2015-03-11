@@ -197,6 +197,9 @@ func onRender() {
 	if rendCont.renderCallback != nil {
 
 		rendCont.renderCallback()
+		if rendCont.RenderDebugInfo {
+			//rendCont.renderJoints()
+		}
 
 	}
 

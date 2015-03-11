@@ -84,13 +84,14 @@ func nextDemo() error {
 	}
 
 	previousDemoScreen := demoScreen
-	demoScreen = demoScreens[currentDemoScreenId]
-	err := demoScreen.activate()
+
+	err := previousDemoScreen.UnloadAssets()
 	if err != nil {
 		return err
 	}
 
-	err = previousDemoScreen.UnloadAssets()
+	demoScreen = demoScreens[currentDemoScreenId]
+	err = demoScreen.activate()
 	if err != nil {
 		return err
 	}
@@ -185,7 +186,19 @@ func initDemoScreens() {
 			"floorSprite.EnablePhysics(gogame.ImmovableMass)",
 		},
 		Color: lightGrey, InitAssets: initDemo6Assets, UnloadAssets: unloadDemo6Assets, RenderCallback: demo6RenderCallback}
-	demoScreens[7] = &DemoScreen{Id: 7, Title: "Joints:", Color: white, InitAssets: initDemo7Assets, UnloadAssets: unloadDemo7Assets, RenderCallback: demo7RenderCallback}
+	demoScreens[7] = &DemoScreen{Id: 7, Title: "Physics Joints:", Description: "Physics enabled sprites can be linked together easily using joints",
+		CodeSample: []string{
+			"// enable physics ",
+			"stillSprite.EnablePhysics(gogame.ImmovableMass)",
+			"swingingSprite.EnablePhysics(0.2)",
+			"",
+			"// joints are positioned relative to the sprites they join",
+			"xOffset := gopherWidth / 2",
+			"yOffset := gopherHeight / 2",
+			"stillSprite.JoinTo(swingingSprite, sdl.Point{int32(xOffset), int32(yOffset)})",
+		},
+
+		Color: white, InitAssets: initDemo7Assets, UnloadAssets: unloadDemo7Assets, RenderCallback: demo7RenderCallback}
 	demoScreens[8] = &DemoScreen{Id: 8, Title: "Game:", Color: white, InitAssets: initDemo8Assets, UnloadAssets: unloadDemo8Assets, RenderCallback: demo8RenderCallback}
 	demoScreens[9] = &DemoScreen{Id: 9, Title: "Credits:", Color: lightGrey, InitAssets: initDemo9Assets, UnloadAssets: unloadDemo9Assets, RenderCallback: demo9RenderCallback}
 
