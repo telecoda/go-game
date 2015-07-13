@@ -10,7 +10,10 @@ import (
 
 func readPixels(rect *sdl.Rect, pixels unsafe.Pointer) error {
 
-	format := rendCont.Window.GetPixelFormat()
+	format, err := rendCont.Window.GetPixelFormat()
+	if err != nil {
+		return err
+	}
 
 	fmt.Printf("Pixel format:%s\n", sdl.GetPixelFormatName(uint(format)))
 
@@ -27,15 +30,20 @@ func getSurfaceFromFont() (*sdl.Surface, error) {
 
 	textColor := sdl.Color{R: 255, B: 0, G: 0, A: 255}
 
-	textSurface := font.RenderText_Solid("test", textColor)
-
+	textSurface, err := font.RenderUTF8_Solid("test", textColor)
+	if err != nil {
+		return nil, err
+	}
 	return textSurface, err
 
 }
 
 func getPixelColorAt(point sdl.Point) (*sdl.Color, error) {
 
-	format := rendCont.Window.GetPixelFormat()
+	format, err := rendCont.Window.GetPixelFormat()
+	if err != nil {
+		return nil, err
+	}
 
 	pixelFormat, err := sdl.AllocFormat(uint(format))
 	if err != nil {

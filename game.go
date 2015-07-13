@@ -69,12 +69,13 @@ func NewGame(winTitle string, winWidth, winHeight int, renderCallback RenderFunc
 	}
 
 	// init audio
-	if sdl.Init(sdl.INIT_AUDIO) < 0 {
-		return nil, nil, nil, nil, fmt.Errorf("Failed to init SDL audio\n")
+	err := sdl.Init(sdl.INIT_AUDIO)
+	if err != nil {
+		return nil, nil, nil, nil, fmt.Errorf("Failed to init SDL audio. Error: %s\n", err)
 	}
-
-	if !mix.OpenAudio(mix.DEFAULT_FREQUENCY, mix.DEFAULT_FORMAT, mix.DEFAULT_CHANNELS, mix.DEFAULT_CHUNKSIZE) {
-		return nil, nil, nil, nil, fmt.Errorf("Failed to open audio\n")
+	err = mix.OpenAudio(mix.DEFAULT_FREQUENCY, mix.DEFAULT_FORMAT, mix.DEFAULT_CHANNELS, mix.DEFAULT_CHUNKSIZE)
+	if err != nil {
+		return nil, nil, nil, nil, fmt.Errorf("Failed to open audio. Error: \n", err)
 	}
 
 	// init ttf
@@ -87,7 +88,7 @@ func NewGame(winTitle string, winWidth, winHeight int, renderCallback RenderFunc
 
 	// destroy old assets first
 	gameAssets.Destroy()
-	err := gameAssets.Initialize()
+	err = gameAssets.Initialize()
 	if err != nil {
 		return nil, nil, nil, nil, err
 	}

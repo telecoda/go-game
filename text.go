@@ -33,7 +33,10 @@ func (r renderController) RenderText(fontAssetId string, text string, pos sdl.Po
 
 	//font.SetOutline(2)
 	//textSurface := font.RenderText_Blended(text, textColor)
-	textSurface := font.RenderText_Blended(text, textColor)
+	textSurface, err := font.RenderUTF8_Blended(text, textColor)
+	if err != nil {
+		return err
+	}
 
 	//backColor := sdl.Color{R: 255, G: 0, B: 0, A: 255}
 	//textSurface := font.RenderText_Shaded(text, textColor, backColor)

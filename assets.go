@@ -57,9 +57,9 @@ func (a *AudioAsset) Load() error {
 		return nil
 	}
 
-	chunk := mix.LoadWAV(a.FilePath)
-	if chunk == nil {
-		return fmt.Errorf("Failed to load wav: %s\n", a.FilePath)
+	chunk, err := mix.LoadWAV(a.FilePath)
+	if err != nil {
+		return fmt.Errorf("Failed to load wav: %s Error: %s\n", a.FilePath, err)
 	}
 
 	if chunk != nil {
