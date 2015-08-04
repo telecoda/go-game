@@ -106,7 +106,11 @@ func unloadDemo6Assets() error {
 
 	stopDemo6Animation()
 
-	renderController.DestroySpriteLayer(0)
+	err := renderController.DestroySpriteLayer(0)
+	if err != nil {
+		fmt.Printf("Error: failed to destroy sprite layer: %d Error: %s", 0, err)
+		return err
+	}
 
 	for _, imageAsset := range demo6Images {
 		err := imageAsset.Unload()
@@ -115,8 +119,6 @@ func unloadDemo6Assets() error {
 		}
 
 	}
-
-
 
 	return nil
 }

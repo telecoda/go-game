@@ -17,12 +17,12 @@ func (r renderController) CreateSpriteLayer(layerId int, pos sdl.Point) (*Sprite
 		layer.Sprites = make(spriteMap)
 		return layer, nil
 	} else {
-		return nil, fmt.Errorf("Error sprite layer :%d already exists", layerId)
+		return nil, fmt.Errorf("Error sprite layer :%d already exists\n", layerId)
 	}
 
 }
 
-func (r renderController) DestroySpriteLayer(layerId int) error {
+func (r *renderController) DestroySpriteLayer(layerId int) error {
 
 	_, ok := r.spriteLayers[layerId]
 	if ok {
@@ -31,7 +31,7 @@ func (r renderController) DestroySpriteLayer(layerId int) error {
 		fmt.Printf("Destroying sprite layer :%d\n", layerId)
 		return nil
 	} else {
-		return fmt.Errorf("Error sprite layer :%d does not exist", layerId)
+		return fmt.Errorf("Error sprite layer :%d does not exist\n", layerId)
 	}
 }
 

@@ -102,6 +102,12 @@ func demo7RenderCallback() {
 func unloadDemo7Assets() error {
 	fmt.Printf("Unloading Demo7 assets\n")
 
+	err := renderController.DestroySpriteLayer(0)
+	if err != nil {
+		fmt.Printf("Error: failed to destroy sprite layer: %d Error: %s", 0, err)
+		return err
+	}
+
 	for _, imageAsset := range demo5Images {
 		err := imageAsset.Unload()
 		if err != nil {
