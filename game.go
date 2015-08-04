@@ -126,6 +126,11 @@ func (r *renderController) GetRenderer() *sdl.Renderer {
 	return r.Renderer
 }
 
+// remove all physics bodies
+func (r *renderController) ClearWorld() {
+	r.world.Clear()
+}
+
 func (e *eventHandler) SetCallback(callback EventReceiverFunction) {
 	e.eventCallback = callback
 }

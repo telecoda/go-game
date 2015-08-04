@@ -115,6 +115,8 @@ func unloadDemo7Assets() error {
 		}
 
 	}
+	// remove physics bodies
+	renderController.ClearWorld()
 
 	stopDemo7Animation()
 	return nil

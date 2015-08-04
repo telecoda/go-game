@@ -120,6 +120,9 @@ func unloadDemo6Assets() error {
 
 	}
 
+	// remove physics bodies
+	renderController.ClearWorld()
+
 	return nil
 }
 

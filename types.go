@@ -77,6 +77,7 @@ type TextureRenderer interface {
 
 type RenderController interface {
 	ClearScreen(color sdl.Color)
+	ClearWorld()
 	FontRenderer
 	SpriteRenderer
 	GridRenderer
