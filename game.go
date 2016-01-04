@@ -58,6 +58,8 @@ func NewGame(winTitle string, winWidth, winHeight int, renderCallback RenderFunc
 		return nil, nil, nil, nil, fmt.Errorf("Error: window not created")
 	}
 
+	//window.SetFullscreen(sdl.WINDOW_FULLSCREEN_DESKTOP)
+
 	// try acceleration first
 	renderer, _ := sdl.CreateRenderer(window, -2, sdl.RENDERER_ACCELERATED)
 	if renderer == nil {
