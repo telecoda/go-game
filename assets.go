@@ -111,6 +111,12 @@ func getChunk(assetId string) (*mix.Chunk, error) {
 
 func (a *assets) AddFontAsset(asset FontAsset, load bool) error {
 
+	// init ttf if not already initialiased
+
+	if !ttf.WasInit() {
+		ttf.Init()
+	}
+
 	if asset.Size < 1 {
 		return fmt.Errorf("Error: font size must be larger than %d", asset.Size)
 	}

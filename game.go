@@ -9,7 +9,6 @@ import (
 	b2d "github.com/neguse/go-box2d-lite/box2dlite"
 	sdl "github.com/veandco/go-sdl2/sdl"
 	mix "github.com/veandco/go-sdl2/sdl_mixer"
-	ttf "github.com/veandco/go-sdl2/sdl_ttf"
 )
 
 const (
@@ -79,9 +78,6 @@ func NewGame(winTitle string, winWidth, winHeight int, renderCallback RenderFunc
 	if err != nil {
 		return nil, nil, nil, nil, fmt.Errorf("Failed to open audio. Error: \n", err)
 	}
-
-	// init ttf
-	ttf.Init()
 
 	gravity := b2d.Vec2{0.0, 10.0}
 	iterations := 10

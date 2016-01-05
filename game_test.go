@@ -19,7 +19,7 @@ func TestNewGame(t *testing.T) {
 	}
 
 	for _, test := range testCases {
-		_, _, _, err := NewGame(test.Title, test.Width, test.Height, test.RenderCallback, test.EventHandler)
+		_, _, _, _, err := NewGame(test.Title, test.Width, test.Height, test.RenderCallback, test.EventHandler)
 		if err == nil && test.ErrorExpected {
 			t.Fatal("Error was expected and none received")
 		}

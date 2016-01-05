@@ -13,7 +13,7 @@ func TestRenderGrid(t *testing.T) {
 	width := 100
 	height := 100
 
-	_, renderController, _, err := NewGame(title, width, height, nil, nil)
+	_, renderController, _, _, err := NewGame(title, width, height, nil, nil)
 	if err != nil {
 		t.Fatalf("Error was not expected and got: %s", err)
 	}
