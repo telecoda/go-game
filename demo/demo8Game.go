@@ -37,7 +37,7 @@ func initDemo8Assets() error {
 	}
 
 	// create layer
-	d8Layer0, err = renderController.CreateSpriteLayer(0, sdl.Point{0, 0})
+	d8Layer0, err = renderer.CreateSpriteLayer(0, sdl.Point{0, 0})
 	if err != nil {
 		return err
 
@@ -61,7 +61,7 @@ func initDemo8Assets() error {
 func startDemo8Animation() {
 
 	// init animation vars
-	renderController.SetDebugInfo(false)
+	renderer.SetDebugInfo(false)
 	//d6EnabledPhysicsSched = gogame.NewFunctionScheduler(time.Duration(2*time.Second), 1, func() { demo6EnablePhysics() })
 	//d6GopherDropperSched = gogame.NewFunctionScheduler(time.Duration(2*time.Second), 100, demo6DropGopher)
 	//d6EnabledPhysicsSched.Start()
@@ -70,11 +70,11 @@ func startDemo8Animation() {
 
 // render screen for demo 8
 func demo8RenderCallback() {
-	renderController.ClearScreen(demoScreen.Color)
+	renderer.ClearScreen(demoScreen.Color)
 
 	renderTitle()
 
-	renderController.RenderLayers()
+	renderer.RenderLayers()
 
 }
 
@@ -83,7 +83,7 @@ func unloadDemo8Assets() error {
 
 	stopDemo8Animation()
 
-	err := renderController.DestroySpriteLayer(0)
+	err := renderer.DestroySpriteLayer(0)
 	if err != nil {
 		fmt.Printf("Error: failed to destroy sprite layer: %d Error: %s", 0, err)
 		return err
@@ -98,7 +98,7 @@ func unloadDemo8Assets() error {
 	}
 
 	// remove physics bodies
-	renderController.ClearWorld()
+	renderer.ClearWorld()
 
 	return nil
 }

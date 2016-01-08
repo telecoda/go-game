@@ -13,20 +13,22 @@ func TestRenderGrid(t *testing.T) {
 	width := 100
 	height := 100
 
-	_, renderController, _, _, err := NewGame(title, width, height, nil, nil)
+	engine, err := NewGame(title, width, height, nil, nil)
 	if err != nil {
 		t.Fatalf("Error was not expected and got: %s", err)
 	}
 
+	renderer := engine.GetRenderer()
+
 	renderColor := sdl.Color{R: 255, G: 0, B: 0, A: 255}
 	backgroundColor := sdl.Color{R: 0, G: 255, B: 0, A: 255}
 
-	renderController.ClearScreen(backgroundColor)
-	renderController.RenderGrid(5, 5, renderColor)
+	renderer.ClearScreen(backgroundColor)
+	renderer.RenderGrid(5, 5, renderColor)
 
 	pixelColor, err := getPixelColorAt(sdl.Point{0, 0})
 
-	rendCont.Renderer.Present()
+	renderer.Present()
 
 	if err != nil {
 		t.Fatalf("Error was not expected and got: %s", err)

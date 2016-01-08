@@ -2,7 +2,7 @@ package gogame
 
 import sdl "github.com/veandco/go-sdl2/sdl"
 
-func (r renderController) RenderGrid(xSize, ySize int, color sdl.Color) {
+func (r renderer) RenderGrid(xSize, ySize int, color sdl.Color) {
 
 	rect := sdl.Rect{X: 0, Y: 0, W: int32(r.width - 1), H: int32(r.height - 1)}
 
@@ -10,7 +10,7 @@ func (r renderController) RenderGrid(xSize, ySize int, color sdl.Color) {
 
 }
 
-func (r renderController) RenderGridInRect(rect sdl.Rect, xSize, ySize int, color sdl.Color) {
+func (r renderer) RenderGridInRect(rect sdl.Rect, xSize, ySize int, color sdl.Color) {
 
 	r.Renderer.SetDrawColor(color.R, color.G, color.B, color.A)
 

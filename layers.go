@@ -7,7 +7,7 @@ import (
 	sdl "github.com/veandco/go-sdl2/sdl"
 )
 
-func (r renderController) CreateSpriteLayer(layerId int, pos sdl.Point) (*SpriteLayer, error) {
+func (r renderer) CreateSpriteLayer(layerId int, pos sdl.Point) (*SpriteLayer, error) {
 
 	layer, ok := r.spriteLayers[layerId]
 	if !ok {
@@ -22,7 +22,7 @@ func (r renderController) CreateSpriteLayer(layerId int, pos sdl.Point) (*Sprite
 
 }
 
-func (r *renderController) DestroySpriteLayer(layerId int) error {
+func (r *renderer) DestroySpriteLayer(layerId int) error {
 
 	_, ok := r.spriteLayers[layerId]
 	if ok {
@@ -61,7 +61,7 @@ func (l *SpriteLayer) AddSpriteToLayer(spriteId string) error {
 }
 
 // renders layers
-func (r renderController) RenderLayers() error {
+func (r renderer) RenderLayers() error {
 
 	furthest := len(r.spriteLayers)
 	if furthest == 0 {

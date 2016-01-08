@@ -23,9 +23,10 @@ var demoScreens map[int]*DemoScreen
 var demoScreen *DemoScreen
 
 var assetHandler gogame.AssetManager
-var renderController gogame.RenderController
 var audioPlayer gogame.AudioPlayer
-var eventHandler gogame.EventHandler
+
+var engine *gogame.Engine
+var renderer gogame.Renderer
 
 func main() {
 
@@ -33,12 +34,17 @@ func main() {
 
 	var err error
 
-	assetHandler, renderController, audioPlayer, eventHandler, err = gogame.NewGame("go-game demo", demoWidth, demoHeight, nil, demoEventReceiver)
+	//assetHandler, renderController, audioPlayer, eventHandler, err = gogame.NewGame("go-game demo", demoWidth, demoHeight, nil, demoEventReceiver)
+	engine, err = gogame.NewGame("go-game demo", demoWidth, demoHeight, nil, demoEventReceiver)
 	if err != nil {
 		fmt.Printf("Error creating game. Program exit.\n", err)
 		return
 	}
 	defer gogame.Destroy()
+
+	renderer = engine.GetRenderer()
+	assetHandler = engine.AssetManager
+	audioPlayer = engine.GetAudioPlayer()
 
 	err = initSharedAssets()
 	if err != nil {
@@ -111,7 +117,7 @@ func (d DemoScreen) activate() error {
 
 	fmt.Printf("Now showing demo:%s\n", demoScreen.Title)
 
-	renderController.SetCallback(d.RenderCallback)
+	renderer.SetCallback(d.RenderCallback)
 
 	return nil
 }

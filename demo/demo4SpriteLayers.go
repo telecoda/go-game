@@ -83,7 +83,7 @@ func initDemo4Assets() error {
 }
 
 func demo4CreateLayer(layerId int) (*gogame.SpriteLayer, error) {
-	layer, err := renderController.CreateSpriteLayer(layerId, sdl.Point{0, 0})
+	layer, err := renderer.CreateSpriteLayer(layerId, sdl.Point{0, 0})
 	if err != nil {
 		return nil, err
 
@@ -110,11 +110,11 @@ func demo4CreateLayer(layerId int) (*gogame.SpriteLayer, error) {
 
 // render screen for demo 4
 func demo4RenderCallback() {
-	renderController.ClearScreen(demoScreen.Color)
+	renderer.ClearScreen(demoScreen.Color)
 
 	renderTitle()
 
-	renderController.RenderLayers()
+	renderer.RenderLayers()
 }
 
 func unloadDemo4Assets() error {
@@ -122,9 +122,9 @@ func unloadDemo4Assets() error {
 
 	stopDemo4Animation()
 
-	renderController.DestroySpriteLayer(0)
-	renderController.DestroySpriteLayer(1)
-	renderController.DestroySpriteLayer(2)
+	renderer.DestroySpriteLayer(0)
+	renderer.DestroySpriteLayer(1)
+	renderer.DestroySpriteLayer(2)
 
 	for _, imageAsset := range demo4Images {
 		err := imageAsset.Unload()
@@ -139,7 +139,7 @@ func unloadDemo4Assets() error {
 
 func startDemo4Animation() {
 
-	renderController.SetDebugInfo(false)
+	renderer.SetDebugInfo(false)
 	// init animation vars
 	//offset = 0.0
 	d4ScrollAnimSched = gogame.NewFunctionScheduler(d4ScrollSpeed, -1, demo4AnimateScrolling)

@@ -55,20 +55,20 @@ func initDemo2Assets() error {
 // render screen for demo 2
 func demo2RenderCallback() {
 
-	renderController.ClearScreen(demoScreen.Color)
+	renderer.ClearScreen(demoScreen.Color)
 
 	renderTitle()
 
-	renderController.RenderGridInRect(textureGrid1, 4, 4, black)
-	renderController.RenderGridInRect(textureGrid2, 4, 4, black)
-	renderController.RenderGridInRect(textureGrid3, 4, 4, black)
-	renderController.RenderGridInRect(textureGrid4, 4, 4, black)
-	renderController.RenderGridInRect(textureGrid5, 4, 4, black)
-	renderController.RenderTexture(D2_GOPHER_RUN_IMAGE, sdl.Point{100, 200}, 32, 32)
-	renderController.RenderTexture(D2_GOPHER_RUN_IMAGE, sdl.Point{200, 200}, 64, 32)
-	renderController.RenderTexture(D2_GOPHER_RUN_IMAGE, sdl.Point{300, 200}, 32, 64)
-	renderController.RenderTexture(D2_GOPHER_RUN_IMAGE, sdl.Point{400, 200}, 64, 64)
-	renderController.RenderRotatedTexture(D2_GOPHER_RUN_IMAGE, sdl.Point{500, 200}, angle, sizeX, sizeY)
+	renderer.RenderGridInRect(textureGrid1, 4, 4, black)
+	renderer.RenderGridInRect(textureGrid2, 4, 4, black)
+	renderer.RenderGridInRect(textureGrid3, 4, 4, black)
+	renderer.RenderGridInRect(textureGrid4, 4, 4, black)
+	renderer.RenderGridInRect(textureGrid5, 4, 4, black)
+	renderer.RenderTexture(D2_GOPHER_RUN_IMAGE, sdl.Point{100, 200}, 32, 32)
+	renderer.RenderTexture(D2_GOPHER_RUN_IMAGE, sdl.Point{200, 200}, 64, 32)
+	renderer.RenderTexture(D2_GOPHER_RUN_IMAGE, sdl.Point{300, 200}, 32, 64)
+	renderer.RenderTexture(D2_GOPHER_RUN_IMAGE, sdl.Point{400, 200}, 64, 64)
+	renderer.RenderRotatedTexture(D2_GOPHER_RUN_IMAGE, sdl.Point{500, 200}, angle, sizeX, sizeY)
 
 	return
 }

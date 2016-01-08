@@ -170,7 +170,7 @@ func (t *textTyping) String() string {
 
 // render screen for demo 1
 func demo1RenderCallback() {
-	renderController.ClearScreen(demoScreen.Color)
+	renderer.ClearScreen(demoScreen.Color)
 
 	renderTitle()
 
@@ -178,43 +178,43 @@ func demo1RenderCallback() {
 
 	// valign
 	fontPos := sdl.Point{textX, 200}
-	renderController.RenderText(SHARED_FONT_24, textLabels[0].String(), fontPos, angle, black, gogame.TOP, gogame.LEFT)
+	renderer.RenderText(SHARED_FONT_24, textLabels[0].String(), fontPos, angle, black, gogame.TOP, gogame.LEFT)
 	renderFontPos(fontPos)
 
 	fontPos = sdl.Point{textX, 250}
-	renderController.RenderText(SHARED_FONT_24, textLabels[1].String(), fontPos, angle, black, gogame.TOP, gogame.CENTER)
+	renderer.RenderText(SHARED_FONT_24, textLabels[1].String(), fontPos, angle, black, gogame.TOP, gogame.CENTER)
 	renderFontPos(fontPos)
 
 	fontPos = sdl.Point{textX, 300}
-	renderController.RenderText(SHARED_FONT_24, textLabels[2].String(), fontPos, angle, black, gogame.TOP, gogame.ABS_CENTER)
+	renderer.RenderText(SHARED_FONT_24, textLabels[2].String(), fontPos, angle, black, gogame.TOP, gogame.ABS_CENTER)
 	renderFontPos(fontPos)
 
 	fontPos = sdl.Point{textX, 350}
-	renderController.RenderText(SHARED_FONT_24, textLabels[3].String(), fontPos, angle, black, gogame.TOP, gogame.RIGHT)
+	renderer.RenderText(SHARED_FONT_24, textLabels[3].String(), fontPos, angle, black, gogame.TOP, gogame.RIGHT)
 	renderFontPos(fontPos)
 
 	// halign
 	fontPos = sdl.Point{textX, 400}
-	renderController.RenderText(SHARED_FONT_24, textLabels[4].String(), fontPos, angle, black, gogame.ABS_MIDDLE, gogame.LEFT)
+	renderer.RenderText(SHARED_FONT_24, textLabels[4].String(), fontPos, angle, black, gogame.ABS_MIDDLE, gogame.LEFT)
 	renderFontPos(fontPos)
 
 	fontPos = sdl.Point{textX, 450}
-	renderController.RenderText(SHARED_FONT_24, textLabels[5].String(), fontPos, angle, black, gogame.TOP, gogame.LEFT)
+	renderer.RenderText(SHARED_FONT_24, textLabels[5].String(), fontPos, angle, black, gogame.TOP, gogame.LEFT)
 	renderFontPos(fontPos)
 
 	fontPos = sdl.Point{textX, 500}
-	renderController.RenderText(SHARED_FONT_24, textLabels[6].String(), fontPos, angle, black, gogame.MIDDLE, gogame.LEFT)
+	renderer.RenderText(SHARED_FONT_24, textLabels[6].String(), fontPos, angle, black, gogame.MIDDLE, gogame.LEFT)
 	renderFontPos(fontPos)
 
 	fontPos = sdl.Point{textX, 550}
-	renderController.RenderText(SHARED_FONT_24, textLabels[7].String(), fontPos, angle, black, gogame.BOTTOM, gogame.LEFT)
+	renderer.RenderText(SHARED_FONT_24, textLabels[7].String(), fontPos, angle, black, gogame.BOTTOM, gogame.LEFT)
 	renderFontPos(fontPos)
 
 }
 
 func renderFontPos(pos sdl.Point) {
-	renderController.GetRenderer().SetDrawColor(255, 0, 0, 255)
+	renderer.GetRenderer().SetDrawColor(255, 0, 0, 255)
 	rect := sdl.Rect{pos.X, pos.Y, 5, 5}
-	renderController.GetRenderer().FillRect(&rect)
+	renderer.GetRenderer().FillRect(&rect)
 
 }

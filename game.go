@@ -23,7 +23,7 @@ var lastFrame = time.Now()
 
 var gameAssets *assets
 
-var rendCont *renderController
+var rendCont *renderer
 var eventHnd *eventHandler
 var audioPlyr *audioPlayer
 
@@ -36,47 +36,49 @@ func init() {
 	gameAssets.Initialize()
 }
 
-func NewGame(winTitle string, winWidth, winHeight int, renderCallback RenderFunction, eventCallback EventReceiverFunction) (AssetManager, RenderController, AudioPlayer, EventHandler, error) {
+//func NewGame(winTitle string, winWidth, winHeight int, renderCallback RenderFunction, eventCallback EventReceiverFunction) (AssetManager, RenderController, AudioPlayer, EventHandler, error) {
+func NewGame(winTitle string, winWidth, winHeight int, renderCallback RenderFunction, eventCallback EventReceiverFunction) (*Engine, error) {
+
 	window, _ := sdl.CreateWindow(
 		winTitle, sdl.WINDOWPOS_CENTERED, sdl.WINDOWPOS_CENTERED,
 		winWidth, winHeight, sdl.WINDOW_OPENGL)
 
 	if winTitle == "" {
-		return nil, nil, nil, nil, fmt.Errorf("Error: window must have a title.")
+		return nil, fmt.Errorf("Error: window must have a title.")
 	}
 
 	if winWidth < 1 {
-		return nil, nil, nil, nil, fmt.Errorf("Error: window width must be greater than 0.")
+		return nil, fmt.Errorf("Error: window width must be greater than 0.")
 	}
 
 	if winHeight < 1 {
-		return nil, nil, nil, nil, fmt.Errorf("Error: window height must be greater than 0.")
+		return nil, fmt.Errorf("Error: window height must be greater than 0.")
 	}
 
 	if window == nil {
-		return nil, nil, nil, nil, fmt.Errorf("Error: window not created")
+		return nil, fmt.Errorf("Error: window not created")
 	}
 
 	//window.SetFullscreen(sdl.WINDOW_FULLSCREEN_DESKTOP)
 
 	// try acceleration first
-	renderer, _ := sdl.CreateRenderer(window, -2, sdl.RENDERER_ACCELERATED)
-	if renderer == nil {
+	sdlRenderer, _ := sdl.CreateRenderer(window, -2, sdl.RENDERER_ACCELERATED)
+	if sdlRenderer == nil {
 		// revert to software
-		renderer, _ := sdl.CreateRenderer(window, -2, sdl.RENDERER_SOFTWARE)
-		if renderer == nil {
-			return nil, nil, nil, nil, fmt.Errorf("Error: rendered not created")
+		sdlRenderer, _ := sdl.CreateRenderer(window, -2, sdl.RENDERER_SOFTWARE)
+		if sdlRenderer == nil {
+			return nil, fmt.Errorf("Error: rendered not created")
 		}
 	}
 
 	// init audio
 	err := sdl.Init(sdl.INIT_AUDIO)
 	if err != nil {
-		return nil, nil, nil, nil, fmt.Errorf("Failed to init SDL audio. Error: %s\n", err)
+		return nil, fmt.Errorf("Failed to init SDL audio. Error: %s\n", err)
 	}
 	err = mix.OpenAudio(mix.DEFAULT_FREQUENCY, mix.DEFAULT_FORMAT, mix.DEFAULT_CHANNELS, mix.DEFAULT_CHUNKSIZE)
 	if err != nil {
-		return nil, nil, nil, nil, fmt.Errorf("Failed to open audio. Error: \n", err)
+		return nil, fmt.Errorf("Failed to open audio. Error: \n", err)
 	}
 
 	gravity := b2d.Vec2{0.0, 10.0}
@@ -88,12 +90,12 @@ func NewGame(winTitle string, winWidth, winHeight int, renderCallback RenderFunc
 	gameAssets.Destroy()
 	err = gameAssets.Initialize()
 	if err != nil {
-		return nil, nil, nil, nil, err
+		return nil, err
 	}
 
-	rendCont = &renderController{
+	rendCont = &renderer{
 		Window:          window,
-		Renderer:        renderer,
+		Renderer:        sdlRenderer,
 		renderCallback:  renderCallback,
 		world:           world,
 		width:           winWidth,
@@ -108,25 +110,37 @@ func NewGame(winTitle string, winWidth, winHeight int, renderCallback RenderFunc
 		eventCallback: eventCallback,
 	}
 
-	return gameAssets, rendCont, audioPlyr, eventHnd, nil
+	engine := &Engine{
+		AssetManager: gameAssets,
+		renderer:     rendCont,
+		audioPlayer:  audioPlyr,
+		eventHandler: eventHnd,
+	}
+
+	//return gameAssets, rendCont, audioPlyr, eventHnd, nil
+	return engine, nil
 }
 
-func (r *renderController) SetCallback(callback RenderFunction) {
+func (r *renderer) SetCallback(callback RenderFunction) {
 	r.renderCallback = callback
 }
 
-func (r *renderController) SetDebugInfo(enabled bool) {
+func (r *renderer) SetDebugInfo(enabled bool) {
 	r.RenderDebugInfo = enabled
 }
 
 // allow low level access to SDL renderer
-func (r *renderController) GetRenderer() *sdl.Renderer {
+func (r *renderer) GetRenderer() *sdl.Renderer {
 	return r.Renderer
 }
 
 // remove all physics bodies
-func (r *renderController) ClearWorld() {
+func (r *renderer) ClearWorld() {
 	r.world.Clear()
+}
+
+func (r *renderer) Present() {
+	r.Renderer.Present()
 }
 
 func (e *eventHandler) SetCallback(callback EventReceiverFunction) {
@@ -209,7 +223,7 @@ func onRender() {
 
 }
 
-func (r *renderController) SetDefaultFont(fontId string) error {
+func (r *renderer) SetDefaultFont(fontId string) error {
 	if fontId == "" {
 		return fmt.Errorf("Error: default fontId cannot be empty.")
 	}

@@ -7,7 +7,7 @@ func initDemo9Assets() error {
 
 // render screen for demo 9
 func demo9RenderCallback() {
-	renderController.ClearScreen(demoScreen.Color)
+	renderer.ClearScreen(demoScreen.Color)
 
 	renderTitle()
 }

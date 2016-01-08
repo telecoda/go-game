@@ -116,7 +116,7 @@ func (s *Sprite) SetImage(assetId string) error {
 	return nil
 }
 
-func (r renderController) RenderSprite(spriteId string) error {
+func (r renderer) RenderSprite(spriteId string) error {
 
 	sprite, ok := gameAssets.spriteBank[spriteId]
 	if !ok {
@@ -141,7 +141,7 @@ func (s *Sprite) render() error {
 
 }
 
-func (r renderController) renderJoints() {
+func (r renderer) renderJoints() {
 
 	rendCont.Renderer.SetDrawColor(0x00, 0xff, 0x00, 0xff)
 

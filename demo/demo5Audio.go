@@ -52,11 +52,11 @@ func initDemo5Assets() error {
 
 // render screen for demo 5
 func demo5RenderCallback() {
-	renderController.ClearScreen(demoScreen.Color)
+	renderer.ClearScreen(demoScreen.Color)
 
 	renderTitle()
 
-	renderController.RenderSprite(D5_GOPHER_TALK_SPRITE)
+	renderer.RenderSprite(D5_GOPHER_TALK_SPRITE)
 
 }
 
@@ -80,7 +80,7 @@ func startDemo5Animation() {
 	// init animation vars
 	d5AnimSched = gogame.NewFunctionScheduler(d5RotateSpeed, -1, demo5AnimateRotation)
 
-	renderController.SetDebugInfo(false)
+	renderer.SetDebugInfo(false)
 
 	d5AnimSched.Start()
 }

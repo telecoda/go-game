@@ -32,7 +32,7 @@ func initDemo0Assets() error {
 	fmt.Printf("Loading Demo0 assets\n")
 
 	for _, fontAsset := range demo0fonts {
-		err := assetHandler.AddFontAsset(fontAsset, true)
+		err := engine.AssetManager.AddFontAsset(fontAsset, true)
 		if err != nil {
 			return fmt.Errorf("Error occurred whilst adding a font asset:%s", err)
 		}
@@ -72,22 +72,22 @@ func unloadDemo0Assets() error {
 
 // render screen for demo 0
 func demo0RenderCallback() {
-	renderController.ClearScreen(demoScreen.Color)
+	renderer.ClearScreen(demoScreen.Color)
 
 	// shadows
-	renderController.RenderText(SHARED_FONT_128, titleString, sdl.Point{X: int32(cx + 5), Y: int32(cy + 5)}, 0.0, darkGrey, gogame.MIDDLE, gogame.CENTER)
-	renderController.RenderText(SHARED_FONT_48, byString, sdl.Point{X: int32(cx + 50), Y: int32(cy + 100)}, 0.0, darkGrey, gogame.MIDDLE, gogame.LEFT)
+	renderer.RenderText(SHARED_FONT_128, titleString, sdl.Point{X: int32(cx + 5), Y: int32(cy + 5)}, 0.0, darkGrey, gogame.MIDDLE, gogame.CENTER)
+	renderer.RenderText(SHARED_FONT_48, byString, sdl.Point{X: int32(cx + 50), Y: int32(cy + 100)}, 0.0, darkGrey, gogame.MIDDLE, gogame.LEFT)
 	// titles
-	renderController.RenderText(SHARED_FONT_128, titleString, sdl.Point{X: 0, Y: 0}, 0.0, black, gogame.ABS_MIDDLE, gogame.ABS_CENTER)
-	renderController.RenderText(SHARED_FONT_48, byString, sdl.Point{X: int32(cx + 48), Y: int32(cy + 98)}, 0.0, black, gogame.MIDDLE, gogame.LEFT)
+	renderer.RenderText(SHARED_FONT_128, titleString, sdl.Point{X: 0, Y: 0}, 0.0, black, gogame.ABS_MIDDLE, gogame.ABS_CENTER)
+	renderer.RenderText(SHARED_FONT_48, byString, sdl.Point{X: int32(cx + 48), Y: int32(cy + 98)}, 0.0, black, gogame.MIDDLE, gogame.LEFT)
 
 	if fadeTitle1 != nil {
-		renderController.RenderText(SHARED_FONT_24, strapLine1, sdl.Point{X: 0, Y: 600}, 0.0, fadeTitle1.CurrentColor, gogame.TOP, gogame.ABS_CENTER)
+		renderer.RenderText(SHARED_FONT_24, strapLine1, sdl.Point{X: 0, Y: 600}, 0.0, fadeTitle1.CurrentColor, gogame.TOP, gogame.ABS_CENTER)
 
 	}
 
 	if fadeTitle2 != nil {
-		renderController.RenderText(SHARED_FONT_24, strapLine2, sdl.Point{X: 0, Y: 650}, 0.0, fadeTitle2.CurrentColor, gogame.TOP, gogame.ABS_CENTER)
+		renderer.RenderText(SHARED_FONT_24, strapLine2, sdl.Point{X: 0, Y: 650}, 0.0, fadeTitle2.CurrentColor, gogame.TOP, gogame.ABS_CENTER)
 
 	}
 

@@ -57,12 +57,12 @@ func initDemo3Assets() error {
 
 // render screen for demo 3
 func demo3RenderCallback() {
-	renderController.ClearScreen(demoScreen.Color)
+	renderer.ClearScreen(demoScreen.Color)
 
 	renderTitle()
 
-	renderController.RenderSprite(D3_GOPHER_STILL_SPRITE)
-	renderController.RenderSprite(D3_GOPHER_SPINNING_SPRITE)
+	renderer.RenderSprite(D3_GOPHER_STILL_SPRITE)
+	renderer.RenderSprite(D3_GOPHER_SPINNING_SPRITE)
 }
 
 func unloadDemo3Assets() error {
@@ -87,8 +87,8 @@ func startDemo3Animation() {
 	angle = 0.0
 	d3RotTextAnimSched = gogame.NewFunctionScheduler(d3RotateTextureSpeed, -1, demo3AnimateRotation)
 
-	renderController.SetDebugInfo(false)
-	d3DebugInfoSched = gogame.NewFunctionScheduler(time.Duration(5*time.Second), 1, func() { renderController.SetDebugInfo(true) })
+	renderer.SetDebugInfo(false)
+	d3DebugInfoSched = gogame.NewFunctionScheduler(time.Duration(5*time.Second), 1, func() { renderer.SetDebugInfo(true) })
 
 	d3RotTextAnimSched.Start()
 	d3DebugInfoSched.Start()

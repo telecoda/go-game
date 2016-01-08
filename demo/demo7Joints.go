@@ -44,7 +44,7 @@ func initDemo7Assets() error {
 
 	}
 
-	d7Layer0, err := renderController.CreateSpriteLayer(0, sdl.Point{0, 0})
+	d7Layer0, err := renderer.CreateSpriteLayer(0, sdl.Point{0, 0})
 	if err != nil {
 		return err
 
@@ -92,17 +92,17 @@ func initDemo7Assets() error {
 
 // render screen for demo 7
 func demo7RenderCallback() {
-	renderController.ClearScreen(demoScreen.Color)
+	renderer.ClearScreen(demoScreen.Color)
 
 	renderTitle()
 
-	renderController.RenderLayers()
+	renderer.RenderLayers()
 }
 
 func unloadDemo7Assets() error {
 	fmt.Printf("Unloading Demo7 assets\n")
 
-	err := renderController.DestroySpriteLayer(0)
+	err := renderer.DestroySpriteLayer(0)
 	if err != nil {
 		fmt.Printf("Error: failed to destroy sprite layer: %d Error: %s", 0, err)
 		return err
@@ -116,7 +116,7 @@ func unloadDemo7Assets() error {
 
 	}
 	// remove physics bodies
-	renderController.ClearWorld()
+	renderer.ClearWorld()
 
 	stopDemo7Animation()
 	return nil
@@ -126,14 +126,14 @@ func startDemo7Animation() {
 
 	d7AnimSched = gogame.NewFunctionScheduler(d7RotateSpeed, -1, demo7AnimateRotation)
 
-	renderController.SetDebugInfo(true)
+	renderer.SetDebugInfo(true)
 
 	d7AnimSched.Start()
 }
 
 func stopDemo7Animation() {
 
-	renderController.SetDebugInfo(false)
+	renderer.SetDebugInfo(false)
 
 	d7AnimSched.Destroy()
 

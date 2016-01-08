@@ -39,7 +39,7 @@ func initSharedAssets() error {
 
 	}
 
-	renderController.SetDefaultFont(SHARED_FONT_8)
+	renderer.SetDefaultFont(SHARED_FONT_8)
 	return nil
 }
 
@@ -47,12 +47,12 @@ func renderTitle() {
 
 	// Title
 	// shadows
-	renderController.RenderText(SHARED_FONT_128, demoScreen.Title, sdl.Point{X: 25, Y: 5}, 0.0, darkGrey, gogame.TOP, gogame.LEFT)
+	renderer.RenderText(SHARED_FONT_128, demoScreen.Title, sdl.Point{X: 25, Y: 5}, 0.0, darkGrey, gogame.TOP, gogame.LEFT)
 	// titles
-	renderController.RenderText(SHARED_FONT_128, demoScreen.Title, sdl.Point{X: 20, Y: 10}, 0.0, black, gogame.TOP, gogame.LEFT)
+	renderer.RenderText(SHARED_FONT_128, demoScreen.Title, sdl.Point{X: 20, Y: 10}, 0.0, black, gogame.TOP, gogame.LEFT)
 
 	// Description
-	renderController.RenderText(SHARED_FONT_16, demoScreen.Description, sdl.Point{50, 160}, 0.0, black, gogame.TOP, gogame.LEFT)
+	renderer.RenderText(SHARED_FONT_16, demoScreen.Description, sdl.Point{50, 160}, 0.0, black, gogame.TOP, gogame.LEFT)
 
 	// Code sample
 	fromLine := 600
@@ -60,7 +60,7 @@ func renderTitle() {
 	codeX := 50
 	codeY := fromLine
 	for _, codeLine := range demoScreen.CodeSample {
-		renderController.RenderText(SHARED_FONT_16, codeLine, sdl.Point{int32(codeX), int32(codeY)}, 0.0, black, gogame.TOP, gogame.LEFT)
+		renderer.RenderText(SHARED_FONT_16, codeLine, sdl.Point{int32(codeX), int32(codeY)}, 0.0, black, gogame.TOP, gogame.LEFT)
 		codeY += lineSpacing
 	}
 
@@ -71,6 +71,6 @@ func renderTitle() {
 func renderFPS() {
 	fps := fmt.Sprintf("FPS:%2.2f", gogame.FramesPerSecond)
 	// fps
-	renderController.RenderText(SHARED_FONT_8, fps, sdl.Point{X: 5, Y: 0}, 0.0, black, gogame.TOP, gogame.LEFT)
+	renderer.RenderText(SHARED_FONT_8, fps, sdl.Point{X: 5, Y: 0}, 0.0, black, gogame.TOP, gogame.LEFT)
 
 }
