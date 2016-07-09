@@ -1,7 +1,7 @@
 #go-game 2D game engine
 
 A partially finished 2D engine which uses go-sdl2 & box2d.
-
+.
 <a href="http://i.imgur.com/anCaMbg.png"><img src="http://i.imgur.com/anCaMbg.png" width="800px@"alt="go-game physics demo"/></a>
 
 It has been kicking around on my hard drive for quite a while.  I thought I may spark a bit of life into the project by actually releasing the source on github.
