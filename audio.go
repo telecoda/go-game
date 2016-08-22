@@ -7,7 +7,7 @@ func (a audioPlayer) PlayAudio(audioAssetId string, loops int) error {
 		return err
 	}
 
-	chunk.PlayChannel(-1, loops)
+	chunk.Play(-1, loops)
 
 	return nil
 
